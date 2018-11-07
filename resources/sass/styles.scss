@@ -1,0 +1,93 @@
+#homeLayout{
+    .modal-card{
+        width: 350px;
+    }
+    .modal-card-title{
+        margin: 0px;
+        text-align: center;
+    }
+    .modal-card-head{
+        background: white;
+        border: none;
+    }
+    .modal-card-foot{
+        button{
+            width: 100%;
+            text-align: center;
+        }
+    }
+    .navbar{
+        background-image: linear-gradient(to right, #3F6D8F, #4fafcf);
+        color: white;
+        position: fixed;
+        top: 0px;
+        right: 0px;
+        left: 0px;
+        .navbar-link{
+            i{
+                font-size: 30px;
+                color: white;
+            }
+        }
+        .navbar-item.has-dropdown:hover .navbar-link{
+            i{
+                color: black;
+            }
+        }
+    }
+    .footer{
+        background-image: linear-gradient(to right, rgb(30, 61, 52), #192529);
+        color: white;
+        padding-bottom: 35px;
+        padding-left: 0px;
+        padding-right: 0px;
+        ul{
+            list-style: none;
+            margin: 0px;
+        }
+        strong{
+            margin-bottom: 10px;
+            color: white;
+        }
+        .iconFollow{
+            ul>li{
+                display: inline-block;
+            }
+        }
+    }
+}
+
+#landingComponent{
+    .header{
+        background-image: linear-gradient(to right, #3F6D8F, #4fafcf);
+        margin-bottom: 30px;
+        min-height: 600px;
+        
+    }
+    .router-link-exact-active{
+        margin-bottom: 10px;
+        img{
+            transition: 0.4s;
+        }
+        img:hover{
+            transform: scale(1.1);
+            transition: 0.4s;
+        }
+    }
+    .landingInfo{
+        h1{
+            color: white;
+            text-align: justify;
+
+        }
+        hr{
+            height: 6px;
+            background-color: #cbad80;
+            width: 115px;
+        }
+        p{
+            text-align: justify;
+            color: white;
+        }
+    }
+}

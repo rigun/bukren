@@ -16,9 +16,10 @@ class CreateUsersDetailsTable extends Migration
         Schema::create('users_details', function (Blueprint $table) {
             $table->increments('id');
             $table->string('npm');
-            $table->string('fakultas');
             $table->string('prodi');
-            $table->string('universitas')->nullable();
+            $table->string('tanggalLahir');
+            $table->string('nomorHp');
+            $table->string('jenisKelamin');
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')
                   ->references('id')->on('users')

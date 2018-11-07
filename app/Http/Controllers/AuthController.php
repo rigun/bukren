@@ -9,17 +9,18 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->middleware('auth:api', ['except' => ['login','register']]);
     }
 
     public function register(Request $request)
     {
-      $user = User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => bcrypt($request->password),
-      ]);
-
+      $user = new User();
+      $user->name = "-";
+      $user->email = $request->email;
+      $user->password = bcrypt($request->password);
+      $user->save();
+      $user->syncRoles(explode(',', "pengguna"));
+      
       $token = auth()->login($user);
 
       return $this->respondWithToken($token);

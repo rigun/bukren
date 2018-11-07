@@ -11,6 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', function () {return view('app');});
+Route::get('/login', function () {return view('app');});
+Route::get('/dashboard', function () {return view('app');});
+Route::get('/logout', function () {return view('app');});

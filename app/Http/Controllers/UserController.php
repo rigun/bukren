@@ -33,36 +33,20 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $this->validateWith([
-            'name' => 'required|max:255',
             'email' => 'required|max:255|unique:users',
             'password' => 'required|max:255',
-            'npm' => 'required|max:255',
-            'fakultas' => 'required|max:255',
-            'prodi' => 'required|max:255',
-            'universitas' => 'required|max:255',
           ]);
   
     
           $password = trim($request->password);
           
           $user = new User();
-          $user->name = $request->name;
+          $user->name = "-";
           $user->email = $request->email;
           $user->password = Hash::make($password);
           $user->save();
-
-          $detailUser = new UsersDetail();
-          $detailUser->npm = $request->npm;
-          $detailUser->fakultas = $request->fakultas;
-          $detailUser->prodi = $request->prodi;
-          $detailUser->universitas = $request->universitas;
-          $detailUser->save();
-
-          if ($request->roles) {
-            $user->syncRoles(explode(',', $request->roles));
-          }
-    
-          return response()->json(['status' => 'success','msg'=>'User berhasil dibuat']);
+          $user->syncRoles(explode(',', "pengguna"));
+          return response()->json(['status' => 'success','msg'=>'Pengguna berhasil dibuat']);
     }
 
     /**
@@ -101,9 +85,10 @@ class UserController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|unique:users,email,'.$id,
             'detail.npm' => 'required',
-            'detail.fakultas' => 'required|max:255',
+            'detail.tanggalLahir' => 'required|max:255',
             'detail.prodi' => 'required|max:255',
-            'detail.universitas' => 'required|max:255',
+            'detail.nomorHp' => 'required|max:255',
+            'detail.jenisKelamin' => 'required'
           ]);
   
          
@@ -122,22 +107,21 @@ class UserController extends Controller
           if($idDetail = UsersDetail::where('user_id',$id)->first()){
             $detailUser = UsersDetail::findOrFail($idDetail->id);
             $detailUser->npm = $request->input('detail.npm');
-            $detailUser->fakultas = $request->input('detail.fakultas');
+            $detailUser->tanggalLahir = $request->input('detail.tanggalLahir');
             $detailUser->prodi = $request->input('detail.prodi');
-            $detailUser->universitas = $request->input('detail.kelas');
+            $detailUser->nomorHp = $request->input('detail.nomorHp');
+            $detailUser->jenisKelamin = $request->input('detail.jenisKelamin');
             $detailUser->save();
           }else{
             $detailUser = new UsersDetail();
             $detailUser->npm = $request->input('detail.npm');
-            $detailUser->fakultas = $request->input('detail.fakultas');
+            $detailUser->tanggalLahir = $request->input('detail.tanggalLahir');
             $detailUser->prodi = $request->input('detail.prodi');
-            $detailUser->universitas = $request->input('detail.universitas');
+            $detailUser->nomorHp = $request->input('detail.nomorHp');
+            $detailUser->jenisKelamin = $request->input('detail.jenisKelamin');
             $detailUser->user_id = $id;
             $detailUser->save();
           }
-          
-    
-         
           return response()->json($json);
     }
 
