@@ -18,6 +18,7 @@ class AuthController extends Controller
       $user->name = "-";
       $user->email = $request->email;
       $user->password = bcrypt($request->password);
+      $user->token = bin2hex(random_bytes(64));
       $user->save();
       $user->syncRoles(explode(',', "pengguna"));
       

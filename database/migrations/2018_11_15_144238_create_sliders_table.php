@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCatatansTable extends Migration
+class CreateSlidersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateCatatansTable extends Migration
      */
     public function up()
     {
-        Schema::create('catatans', function (Blueprint $table) {
+        Schema::create('sliders', function (Blueprint $table) {
             $table->increments('id');
-            $table->text('pesan');
-            $table->unsignedInteger('pengirim_id');
-            $table->unsignedInteger('penerima_id');
+            $table->integer('urutan');
+            $table->string('filename');
+            $table->string('originalName');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateCatatansTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('catatans');
+        Schema::dropIfExists('sliders');
     }
 }

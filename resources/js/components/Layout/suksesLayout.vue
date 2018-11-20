@@ -1,9 +1,9 @@
 <template>
-  <div id="content">
-    <nav class="navbar has-shadow is-dark">
+  <div id="suksesLayout">
+    <nav class="navbar has-shadow">
         <div class="container">
             <div class="navbar-start">
-                        <router-link :to="{name: 'Landing'}"  class="navbar-item" style="text-align: left;display: flex;color: white;">
+                        <router-link :to="{name: 'Landing'}"  class="navbar-item" >
                
                     <img src="/images/Logo.png" alt="Logo" />
                     <p class="m-l-15">Bukren</p>
@@ -15,12 +15,14 @@
     </nav>
 
     <div class="container">
-        <div class="columns">
-            <div class="column">
-                <div class="card">
-                    <div class="card-content">
-                        <h1>Pendaftaran Berhasil</h1>
-                        <p>Silahkan Lakukan verifikasi email terlebih dahulu dengan cara mengakses link yang telah kami kirim ke email anda</p>
+        <div class="columns m-t-65">
+            <div class="column is-half is-offset-one-quarter">
+                <div class="box">
+                    <div class="content " style="text-align:center">
+                        <img :src="'../images/logo.png'" alt="" width="140px">
+                         <h2>Pendaftaran Berhasil</h2>
+                       <p>Silahkan Lakukan verifikasi email terlebih dahulu dengan cara mengakses link yang telah kami kirim ke email anda</p>
+                        
                     </div>
                 </div>
             </div>

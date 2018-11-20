@@ -16,9 +16,12 @@ class CreateBooksTable extends Migration
         Schema::create('books', function (Blueprint $table) {
             $table->increments('id');
             $table->string('filename');
+            $table->string('originalName');
+            $table->string('slug')->unique();
             $table->string('nama');
             $table->string('pengarang');
             $table->unsignedInteger('id_pemilik');
+            $table->unsignedInteger('id_kategori');
             $table->text('deskripsi');
             $table->double('harga')->nullable();
             $table->string('type');
@@ -29,6 +32,7 @@ class CreateBooksTable extends Migration
             $table->foreign('id_pemilik')
                   ->references('id')->on('users')
                   ->onDelete('cascade');
+
         });
     }
 

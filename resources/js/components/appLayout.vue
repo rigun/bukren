@@ -1,4 +1,8 @@
 <template>
-    <router-view></router-view>
+<div>
+       <div class="background-color-all"></div>
+        <router-view></router-view>
+
+</div>
 </template>
 

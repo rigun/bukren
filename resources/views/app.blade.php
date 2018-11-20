@@ -8,14 +8,18 @@
         <title>Bukren</title>
 
         <!-- Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Patrick+Hand" rel="stylesheet"> 
         <!-- Styles -->
+        <link href="{{ asset('css/modernizr.css') }}" rel="stylesheet">
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/slider.css') }}" rel="stylesheet">
     </head>
     <body>
         <div id="mainLayout">
             <app-layout></app-layout>
         </div>
     </body>
+    <script src="{{ asset('js/jssor.slider-27.5.0.min.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/style.js') }}"></script>
 

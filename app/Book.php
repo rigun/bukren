@@ -10,7 +10,7 @@ class Book extends Model
         return $this->belongsTo(User::class,'id_pemilik');
     }
     public function kategori(){
-        return $this->belongsToMany('App\Kategori','kategori_buku','book_id','kategori_id');
+        return $this->belongsTo('App\Kategori','id_kategori');
     }
 
 }

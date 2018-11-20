@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         // $this->call(UsersTableSeeder::class);
         $this->call(LaratrustSeeder::class);
-        $this->call(KategoriSeed::class);
+        // $this->call(KategoriSeed::class);
 
     }
 }

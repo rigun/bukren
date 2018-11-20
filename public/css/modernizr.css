@@ -1,0 +1,54 @@
+  .barangImage a .name {
+    top: 0px;
+    left: -100%;
+    -webkit-transition: all 0.3s ease;
+    -webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+  }
+  
+    .barangImage a .name span {
+    display: block;
+    padding: 10px 0;
+    margin: 40px 20px 20px 20px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    text-transform: uppercase;
+    font-weight: normal;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+  }
+  
+    .barangImage a:hover .name {
+    left: 0px;
+  }
+  
+    .barangImage a,
+    .barangImage a img {
+    display: block;
+    position: relative;
+  }
+  
+    .barangImage a {
+    overflow: hidden !important;
+  }
+  
+    .barangImage .name {
+    position: absolute;
+    background: #333;
+    background: rgba(75, 75, 75, 0.7);
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+  }
+  
+    .barangImage.ng-enter {
+    -webkit-animation: 1s linear added;
+            animation: 1s linear added;
+  }
+  
+    .barangImage.ng-leave {
+    -webkit-animation: 1s linear deleted;
+            animation: 1s linear deleted;
+  }

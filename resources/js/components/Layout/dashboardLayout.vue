@@ -35,7 +35,7 @@
                     <div class="navbar-dropdown arrow-up"></div>
                         <ul id="navbarRight" class="navbar-dropdown is-boxed  is-right box-dropdown-custom">
                             <li>
-                            <router-link v-if="roles != 'user'" class="navbar-item" v-bind:to="{ name: 'UploadFile'}"> Upload File</router-link>
+                            <router-link v-if="roles != 'user'" class="navbar-item" v-bind:to="{ name: 'UserList'}"> Daftar Pengguna</router-link>
                             <router-link v-else class="navbar-item" v-bind:to="{name: 'StudentsProfile', params: {id:user.id}}" > <i class="fa fa-user m-r-10" aria-hidden="true"></i> Profile Saya </router-link>
                             </li>
                             <hr class="navbar-divider">
@@ -56,9 +56,9 @@
             <aside class="menu">
                 <div id="side-header" class="side-header">
                     <div class="menu-label imgLabel">
-                        <router-link :to="{name: 'Landing'}">
-                        <!-- <img src="/images/Logo.png" alt="Logo" /> -->
-                        <h1>Bukren</h1>
+                       <router-link :to="{name: 'Landing'}" style="color: white">
+                        <img src="/images/logo.png" height="40" style="margin-right: 20px; width: auto;">
+                        <p class="amihealthy">BUKREN</p>
                         </router-link>
                     </div>
                 </div>
@@ -70,14 +70,9 @@
                     </div>
                     <ul class="menu-list">
                         <li><router-link v-bind:to="{name: 'DashboardContent'}"><i class="fa fa-home m-r-10" aria-hidden="true"></i>  <span>Dashboard</span> </router-link></li>
-                        <li><router-link v-bind:to="{ name: 'PostComponent', params: { kategori: 'PPDB' }}"  ><i class="fa fa-file m-r-10" aria-hidden="true"></i>  <span>Buku Saya</span> </router-link></li>
-                        <li><router-link v-bind:to="{ name: 'PostComponent', params: { kategori: 'PPDB' }}"  ><i class="fa fa-file m-r-10" aria-hidden="true"></i>  <span>Transaksi Saya</span> </router-link></li>
-                        <li><router-link v-bind:to="{ name: 'PostComponent', params: { kategori: 'PPDB' }}"  ><i class="fa fa-file m-r-10" aria-hidden="true"></i>  <span>Laporan</span> </router-link></li>
-                        <li><router-link v-bind:to="{ name: 'PostComponent', params: { kategori: 'PPDB' }}"  ><i class="fa fa-file m-r-10" aria-hidden="true"></i>  <span>Laporan</span> </router-link></li>
+                        <li><router-link v-bind:to="{ name: 'BarangList'}"  ><i class="fa fa-file m-r-10" aria-hidden="true"></i>  <span>Barang</span> </router-link></li>
+                        <li><router-link v-bind:to="{ name: 'ArticlesList'}"  ><i class="fa fa-file m-r-10" aria-hidden="true"></i>  <span>Article</span> </router-link></li>
                     </ul>
-
-                    
-                    
                 </div>
             </aside>
         </div>
@@ -138,7 +133,7 @@
 import { vueTopprogress } from 'vue-top-progress'
        export default {
             components: {
-            vueTopprogress
+            vueTopprogress,
         },
         data() {
             return {
