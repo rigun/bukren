@@ -47949,7 +47949,7 @@ var ModalForm = {
                 var uri = '/api/user';
                 axios.post(uri, { email: this.email, password: this.password }).then(function (response) {
                     _this2.load = false;
-                    axios.post('/api/mail/send/', { email: _this2.email }).then(function (response) {
+                    axios.post('/api/mail/send', { email: _this2.email }).then(function (response) {
                         _this2.$router.push({ name: 'SuksesLayout' });
                     }).catch(function (error) {
                         _this2.$toast.open({
