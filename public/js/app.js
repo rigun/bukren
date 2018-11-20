@@ -47949,13 +47949,22 @@ var ModalForm = {
                 var uri = '/api/user';
                 axios.post(uri, { email: this.email, password: this.password }).then(function (response) {
                     _this2.load = false;
-                    _this2.$parent.close();
-                    _this2.$router.push({ name: 'SuksesLayout' });
+                    axios.post('api/mail/send/', { email: _this2.email }).then(function (response) {
+                        _this2.$router.push({ name: 'SuksesLayout' });
+                    }).catch(function (error) {
+                        _this2.$toast.open({
+                            duration: 2000,
+                            message: 'Gagal saat mengirim email',
+                            position: 'is-bottom',
+                            type: 'is-danger',
+                            queue: false
+                        });
+                    });
                 }).catch(function (error) {
                     _this2.$parent.close();
                     _this2.$toast.open({
                         duration: 2000,
-                        message: error,
+                        message: 'Coba Lagi',
                         position: 'is-bottom',
                         type: 'is-danger',
                         queue: false

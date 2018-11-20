@@ -72,7 +72,7 @@ Route::get('/search/{search}', 'BookController@search');
 Route::get('/kategori', 'KategoriController@index');
 Route::post('/user', 'AuthController@register');
 Route::get('/user/email/{email}', 'UserController@apiCheckUnique');
-Route::get('/mail/send', 'MailController@send');
+Route::post('/mail/send', 'MailController@send');
 
 Route::group([
 

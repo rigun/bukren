@@ -219,13 +219,22 @@ const ModalForm = {
                     let uri = '/api/user';
                     axios.post(uri,{email: this.email, password: this.password}).then((response) => {
                         this.load = false;
-                        this.$parent.close()
-                        this.$router.push({ name: 'SuksesLayout' })
+                        axios.post('api/mail/send/',{email: this.email}).then((response) =>{
+                            this.$router.push({ name: 'SuksesLayout' })
+                        }).catch(error =>{
+                            this.$toast.open({
+                                duration: 2000,
+                                message: 'Gagal saat mengirim email',
+                                position: 'is-bottom',
+                                type: 'is-danger',
+                                queue: false,
+                            })
+                        })
                     }).catch(error => {
                         this.$parent.close()
                         this.$toast.open({
                         duration: 2000,
-                        message: error,
+                        message: 'Coba Lagi',
                         position: 'is-bottom',
                         type: 'is-danger',
                         queue: false,
