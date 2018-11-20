@@ -20,6 +20,7 @@ Route::get('/listbytype/{type}', function () {return view('app');});
 Route::get('/detaillist/{slug}', function () {return view('app');});
 Route::get('/blog/{slug}', function () {return view('app');});
 Route::get('/search/{search}', function () {return view('app');});
+Route::get('/verifikasiEmail/{token}', function () {return view('app');});
 
 
 
