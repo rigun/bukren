@@ -219,7 +219,7 @@ const ModalForm = {
                     let uri = '/api/user';
                     axios.post(uri,{email: this.email, password: this.password}).then((response) => {
                         this.load = false;
-                        axios.post('api/mail/send/',{email: this.email}).then((response) =>{
+                        axios.post('/api/mail/send/',{email: this.email}).then((response) =>{
                             this.$router.push({ name: 'SuksesLayout' })
                         }).catch(error =>{
                             this.$toast.open({
