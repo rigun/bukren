@@ -23,7 +23,7 @@
                     </div>
                     <div class="control">
                         <a class="button" @click="search()">
-                        <img :src="'http://127.0.0.1:8000/images/icons/search.png'" style="width: 20px" alt="search">
+                        <img :src="'https://bukren.thekingcorp.org/images/icons/search.png'" style="width: 20px" alt="search">
                         </a>
                     </div>
                 </div>
@@ -91,10 +91,10 @@
                     <div class="column iconFollow">
                         <strong>Ikuti Kami</strong>
                         <ul >
-                            <li><img :src="'http://127.0.0.1:8000/images/icons/sosmed/fb.png'" alt="facebook"></li>
-                            <li><img :src="'http://127.0.0.1:8000/images/icons/sosmed/ins.png'" alt="instagram"></li>
-                            <li><img :src="'http://127.0.0.1:8000/images/icons/sosmed/line.png'" alt="line"></li>
-                            <li><img :src="'http://127.0.0.1:8000/images/icons/sosmed/twit.png'" alt="twitter"></li>
+                            <li><img :src="'https://bukren.thekingcorp.org/images/icons/sosmed/fb.png'" alt="facebook"></li>
+                            <li><img :src="'https://bukren.thekingcorp.org/images/icons/sosmed/ins.png'" alt="instagram"></li>
+                            <li><img :src="'https://bukren.thekingcorp.org/images/icons/sosmed/line.png'" alt="line"></li>
+                            <li><img :src="'https://bukren.thekingcorp.org/images/icons/sosmed/twit.png'" alt="twitter"></li>
                         </ul>
                     </div>
                 </div>
@@ -128,7 +128,7 @@ const ModalForm = {
                 load: false,
                 infoView: 'none',
                 infoMessage: null,
-                valid: null,
+                valid: 0,
             }
         },
         template: `
@@ -190,24 +190,27 @@ const ModalForm = {
         methods:{
             cekEmail(){
                 var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-                
                 if(this.email == ''){
                     this.infoView = "none";
-                        this.infoMessage = ''
+                        this.infoMessage = '';
+                        this.valid = 0;
                 }else if( re.test(String(this.email).toLowerCase()) ){
                     let uri = '/api/user/email/'+this.email;
                     axios.get(uri).then((response) => {
                     if(response.data){
+                        this.valid = 0;
                         this.infoView = "is-danger";
                         this.infoMessage = "Email sudah terdaftar"
                     }else if(!response.data){
+                        this.valid = 1;
                         this.infoView = "is-success";
                         this.infoMessage = "Email tersedia"
                     }
                     })
                 }else{
+                    this.valid = 0;
                     this.infoView = "is-danger";
-                        this.infoMessage = "Email tidak valid"
+                    this.infoMessage = "Email tidak valid"
                 }
 
             },

@@ -35,7 +35,7 @@
                     <ul>
                         <li><button class="button button-primary is-warning" style="width: 100%" @click="editBarang(barang)">Edit Barang </button></li>
                         <li><button class="button button-primary is-danger" style="width: 100%" @click="deleteBarang(barang.id)">Hapus Barang </button></li>
-                        <li><button class="button button-primary is-info " style="width: 100%" @click="copyToClipboard(barang.slug,'http://127.0.0.1:8000/detaillist/')">Copy Url</button></li>
+                        <li><button class="button button-primary is-info " style="width: 100%" @click="copyToClipboard(barang.slug,'https://bukren.thekingcorp.org/detaillist/')">Copy Url</button></li>
                     </ul>
                         
                         
@@ -80,7 +80,7 @@ const ModalForm = {
                 pengarang: '',
                 kat_id: '',
                 slug: '',
-                url: 'http://127.0.0.1:8000',
+                url: 'https://bukren.thekingcorp.org',
                 editImage: null,
             }
         },
