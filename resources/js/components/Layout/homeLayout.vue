@@ -216,44 +216,66 @@ const ModalForm = {
             },
             senddata(){
                 if(this.type=="submit"){
-                    let uri = '/api/user';
-                    axios.post(uri,{email: this.email, password: this.password}).then((response) => {
+                    if(this.valid == 1){
+                        let uri = '/api/user';
+                            axios.post(uri,{email: this.email, password: this.password}).then((response) => {
+                                this.load = false;
+                                axios.post('/api/mail/send',{email: this.email}).then((response) =>{
+                                    this.$router.push({ name: 'SuksesLayout' })
+                                }).catch(error =>{
+                                    this.$toast.open({
+                                        duration: 2000,
+                                        message: 'Gagal saat mengirim email',
+                                        position: 'is-bottom',
+                                        type: 'is-danger',
+                                        queue: false,
+                                    })
+                                })
+                            }).catch(error => {
+                                this.$toast.open({
+                                    duration: 2000,
+                                    message: 'Coba Lagi',
+                                    position: 'is-bottom',
+                                    type: 'is-danger',
+                                    queue: false,
+                                })
+                        });
+                    }else{
                         this.load = false;
-                        axios.post('/api/mail/send',{email: this.email}).then((response) =>{
-                            this.$router.push({ name: 'SuksesLayout' })
-                        }).catch(error =>{
-                            this.$toast.open({
-                                duration: 2000,
-                                message: 'Gagal saat mengirim email',
-                                position: 'is-bottom',
-                                type: 'is-danger',
-                                queue: false,
-                            })
-                        })
-                    }).catch(error => {
-                        this.$parent.close()
                         this.$toast.open({
-                        duration: 2000,
-                        message: 'Coba Lagi',
-                        position: 'is-bottom',
-                        type: 'is-danger',
-                        queue: false,
-                    })
-                  });
+                            duration: 2000,
+                            message: 'Data Belum Lengkap',
+                            position: 'is-bottom',
+                            type: 'is-danger',
+                            queue: false,
+                        })
+                    }
+                    
                 }else if(this.type=="login"){
                     axios.post('/api/auth/login', {
                         email: this.email,
                         password: this.password
                     }).then(response => {
-                        store.commit('loginUser')
-                        localStorage.setItem('token', response.data.access_token)
-                        localStorage.setItem('roles', response.data.role)
-                        this.load = false;
-                        if(response.data.role == 'pengguna'){
-                            this.$parent.close();
-                            this.$emit('get-user')
+                        if(response.data.status == 1){
+                            store.commit('loginUser')
+                            localStorage.setItem('token', response.data.access_token)
+                            localStorage.setItem('roles', response.data.role)
+                            this.load = false;
+                            if(response.data.role == 'pengguna'){
+                                this.$parent.close();
+                                this.$emit('get-user')
+                            }else{
+                                this.$router.push({ name: 'DashboardContent' })
+                            }
                         }else{
-                            this.$router.push({ name: 'DashboardContent' })
+                        this.$parent.close()
+                             this.$toast.open({
+                                duration: 2000,
+                                message: "Silahkan Verifikasi Email Anda Terlebih Dahulu",
+                                position: 'is-bottom',
+                                type: 'is-danger',
+                                queue: false,
+                            });
                         }
                         
                     }).catch(error => {

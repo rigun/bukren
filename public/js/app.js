@@ -47951,44 +47951,65 @@ var ModalForm = {
             var _this2 = this;
 
             if (this.type == "submit") {
-                var uri = '/api/user';
-                axios.post(uri, { email: this.email, password: this.password }).then(function (response) {
-                    _this2.load = false;
-                    axios.post('/api/mail/send', { email: _this2.email }).then(function (response) {
-                        _this2.$router.push({ name: 'SuksesLayout' });
+                if (this.valid == 1) {
+                    var uri = '/api/user';
+                    axios.post(uri, { email: this.email, password: this.password }).then(function (response) {
+                        _this2.load = false;
+                        axios.post('/api/mail/send', { email: _this2.email }).then(function (response) {
+                            _this2.$router.push({ name: 'SuksesLayout' });
+                        }).catch(function (error) {
+                            _this2.$toast.open({
+                                duration: 2000,
+                                message: 'Gagal saat mengirim email',
+                                position: 'is-bottom',
+                                type: 'is-danger',
+                                queue: false
+                            });
+                        });
                     }).catch(function (error) {
                         _this2.$toast.open({
                             duration: 2000,
-                            message: 'Gagal saat mengirim email',
+                            message: 'Coba Lagi',
                             position: 'is-bottom',
                             type: 'is-danger',
                             queue: false
                         });
                     });
-                }).catch(function (error) {
-                    _this2.$parent.close();
-                    _this2.$toast.open({
+                } else {
+                    this.load = false;
+                    this.$toast.open({
                         duration: 2000,
-                        message: 'Coba Lagi',
+                        message: 'Data Belum Lengkap',
                         position: 'is-bottom',
                         type: 'is-danger',
                         queue: false
                     });
-                });
+                }
             } else if (this.type == "login") {
                 axios.post('/api/auth/login', {
                     email: this.email,
                     password: this.password
                 }).then(function (response) {
-                    __WEBPACK_IMPORTED_MODULE_0__store__["a" /* default */].commit('loginUser');
-                    localStorage.setItem('token', response.data.access_token);
-                    localStorage.setItem('roles', response.data.role);
-                    _this2.load = false;
-                    if (response.data.role == 'pengguna') {
-                        _this2.$parent.close();
-                        _this2.$emit('get-user');
+                    if (response.data.status == 1) {
+                        __WEBPACK_IMPORTED_MODULE_0__store__["a" /* default */].commit('loginUser');
+                        localStorage.setItem('token', response.data.access_token);
+                        localStorage.setItem('roles', response.data.role);
+                        _this2.load = false;
+                        if (response.data.role == 'pengguna') {
+                            _this2.$parent.close();
+                            _this2.$emit('get-user');
+                        } else {
+                            _this2.$router.push({ name: 'DashboardContent' });
+                        }
                     } else {
-                        _this2.$router.push({ name: 'DashboardContent' });
+                        _this2.$parent.close();
+                        _this2.$toast.open({
+                            duration: 2000,
+                            message: "Silahkan Verifikasi Email Anda Terlebih Dahulu",
+                            position: 'is-bottom',
+                            type: 'is-danger',
+                            queue: false
+                        });
                     }
                 }).catch(function (error) {
                     _this2.loginError = true;
@@ -49085,7 +49106,9 @@ var render = function() {
                 attrs: { to: { name: "Landing" } }
               },
               [
-                _c("img", { attrs: { src: "/images/Logo.png", alt: "Logo" } }),
+                _c("img", {
+                  attrs: { src: "../images/Logo.png", alt: "Logo" }
+                }),
                 _vm._v(" "),
                 _c("p", { staticClass: "m-l-15" }, [_vm._v("Bukren")])
               ]
@@ -60119,7 +60142,9 @@ var render = function() {
                 attrs: { to: { name: "Landing" } }
               },
               [
-                _c("img", { attrs: { src: "/images/Logo.png", alt: "Logo" } }),
+                _c("img", {
+                  attrs: { src: "../../images/Logo.png", alt: "Logo" }
+                }),
                 _vm._v(" "),
                 _c("p", { staticClass: "m-l-15" }, [_vm._v("Bukren")])
               ]
@@ -60142,7 +60167,11 @@ var render = function() {
               },
               [
                 _c("img", {
-                  attrs: { src: "../images/logo.png", alt: "", width: "140px" }
+                  attrs: {
+                    src: "../../images/logo.png",
+                    alt: "",
+                    width: "140px"
+                  }
                 }),
                 _vm._v(" "),
                 _c("h2", [_vm._v(_vm._s(_vm.msg))]),

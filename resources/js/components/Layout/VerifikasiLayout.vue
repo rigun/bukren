@@ -5,7 +5,7 @@
             <div class="navbar-start">
                         <router-link :to="{name: 'Landing'}"  class="navbar-item" >
                
-                    <img src="/images/Logo.png" alt="Logo" />
+                    <img :src="'../../images/Logo.png'" alt="Logo" />
                     <p class="m-l-15">Bukren</p>
                         </router-link>
 
@@ -19,7 +19,7 @@
             <div class="column is-half is-offset-one-quarter">
                 <div class="box">
                     <div class="content " style="text-align:center">
-                        <img :src="'../images/logo.png'" alt="" width="140px">
+                        <img :src="'../../images/logo.png'" alt="" width="140px">
                          <h2>{{msg}}</h2>
                        <p v-if="statusMsg != 0">Terima kasih sudah melakukan verfikasi email, selamat bergabung bersama Bukren</p>
                         
