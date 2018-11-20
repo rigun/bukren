@@ -45752,6 +45752,7 @@ var DashboardLayout = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('das
 var HomeLayout = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('home-layout', __webpack_require__(50));
 var LoginLayout = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('login-layout', __webpack_require__(56));
 var SuksesLayout = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('SuksesLayout', __webpack_require__(59));
+var VerifikasiLayout = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('VerifikasiLayout', __webpack_require__(159));
 
 var Logout = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('logout', __webpack_require__(62));
 
@@ -45783,6 +45784,10 @@ var routes = [{
     name: 'SuksesLayout',
     path: '/sukses',
     component: SuksesLayout
+}, {
+    name: 'VerifikasiLayout',
+    path: '/verifikasiEmail/:token',
+    component: VerifikasiLayout
 }, {
     // name: 'HomeLayout',
     path: '/',
@@ -59964,6 +59969,208 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 150 */,
+/* 151 */,
+/* 152 */,
+/* 153 */,
+/* 154 */,
+/* 155 */,
+/* 156 */,
+/* 157 */,
+/* 158 */,
+/* 159 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(160)
+/* template */
+var __vue_template__ = __webpack_require__(161)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/Layout/VerifikasiLayout.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-5493412e", Component.options)
+  } else {
+    hotAPI.reload("data-v-5493412e", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 160 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            msg: 'Mohon tunggu sebentar',
+            statusMsg: 0
+        };
+    },
+
+    created: function created() {
+        this.sendVerifikasi();
+    },
+    methods: {
+        sendVerifikasi: function sendVerifikasi() {
+            var _this = this;
+
+            var url = '/api/user/verfikasi/' + this.$route.params.token;
+            axios.get(url, {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('token')
+                }
+            }).then(function (response) {
+                _this.msg = 'Verifikasi Berhasil Dilakukan';
+                _this.statusMsg = 1;
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 161 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { attrs: { id: "suksesLayout" } }, [
+    _c("nav", { staticClass: "navbar has-shadow" }, [
+      _c("div", { staticClass: "container" }, [
+        _c(
+          "div",
+          { staticClass: "navbar-start" },
+          [
+            _c(
+              "router-link",
+              {
+                staticClass: "navbar-item",
+                attrs: { to: { name: "Landing" } }
+              },
+              [
+                _c("img", { attrs: { src: "/images/Logo.png", alt: "Logo" } }),
+                _vm._v(" "),
+                _c("p", { staticClass: "m-l-15" }, [_vm._v("Bukren")])
+              ]
+            )
+          ],
+          1
+        )
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "container" }, [
+      _c("div", { staticClass: "columns m-t-65" }, [
+        _c("div", { staticClass: "column is-half is-offset-one-quarter" }, [
+          _c("div", { staticClass: "box" }, [
+            _c(
+              "div",
+              {
+                staticClass: "content ",
+                staticStyle: { "text-align": "center" }
+              },
+              [
+                _c("img", {
+                  attrs: { src: "../images/logo.png", alt: "", width: "140px" }
+                }),
+                _vm._v(" "),
+                _c("h2", [_vm._v(_vm._s(_vm.msg))]),
+                _vm._v(" "),
+                _vm.statusMsg != 0
+                  ? _c("p", [
+                      _vm._v(
+                        "Terima kasih sudah melakukan verfikasi email, selamat bergabung bersama Bukren"
+                      )
+                    ])
+                  : _vm._e()
+              ]
+            )
+          ])
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-5493412e", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

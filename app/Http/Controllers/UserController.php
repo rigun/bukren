@@ -142,6 +142,13 @@ class UserController extends Controller
           
           return response()->json($json);
     }
+    public function verifikasi($token)
+    {
+          $user = User::where('token', $token)->first();
+          $user->status = 1;
+          $user->save();
+          return 'Verifikasi Berhasil';
+    }
     public function destroy($id)
     {
         $user = User::findOrFail($id);

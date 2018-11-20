@@ -10,6 +10,7 @@ const DashboardLayout = Vue.component('dashboard-layout', require('./components/
 const HomeLayout = Vue.component('home-layout', require('./components/Layout/homeLayout.vue'))
 const LoginLayout = Vue.component('login-layout', require('./components/Layout/loginLayout.vue'))
 const SuksesLayout = Vue.component('SuksesLayout', require('./components/Layout/suksesLayout.vue'))
+const VerifikasiLayout = Vue.component('VerifikasiLayout', require('./components/Layout/VerifikasiLayout.vue'))
 
 const Logout = Vue.component('logout', require('./components/LogoutComponent.vue'))
 
@@ -47,6 +48,11 @@ const routes = [
         name: 'SuksesLayout',
         path: '/sukses',
         component: SuksesLayout,
+      },
+      {
+        name: 'VerifikasiLayout',
+        path: '/verifikasiEmail/:token',
+        component: VerifikasiLayout,
       },
     {
         // name: 'HomeLayout',

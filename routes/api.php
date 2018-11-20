@@ -73,6 +73,7 @@ Route::get('/kategori', 'KategoriController@index');
 Route::post('/user', 'AuthController@register');
 Route::get('/user/email/{email}', 'UserController@apiCheckUnique');
 Route::post('/mail/send', 'MailController@send');
+Route::get('/user/verfikasi/{token}', 'UserController@verifikasi');
 
 Route::group([
 
