@@ -5,7 +5,7 @@
             <div class="navbar-start">
                         <router-link :to="{name: 'Landing'}"  class="navbar-item" >
                
-                    <img :src="'../../images/Logo.png'" alt="Logo" />
+                    <img :src="'../../images/logo.png'" alt="Logo" />
                     <p class="m-l-15">Bukren</p>
                         </router-link>
 
