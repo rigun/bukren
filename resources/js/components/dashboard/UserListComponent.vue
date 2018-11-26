@@ -142,7 +142,7 @@
 
                  this.$toast.open({
                   duration: 2000,
-                  message: response.data.msg,
+                  message: "Status terupdate",
                   position: 'is-bottom',
                   type: 'is-success',
                   queue: false,

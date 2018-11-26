@@ -53145,7 +53145,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         _this.$toast.open({
           duration: 2000,
-          message: response.data.msg,
+          message: "Status terupdate",
           position: 'is-bottom',
           type: 'is-success',
           queue: false
