@@ -101,10 +101,7 @@ class KategoriController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return "tes";
-        $this->validateWith([
-            'name' => 'required',
-          ]);
+
           $item = Kategori::find($id);
               if (empty($item)) {
             return response()->json(['message' => 'Sorry file does not exist'], 400);
