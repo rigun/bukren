@@ -1,4 +1,4 @@
-<template id="admin-list">
+<template id="user-list">
 <div class="contentlist">
 <div class="flex-container">
       <div class="columns m-t-10">
@@ -6,7 +6,7 @@
           <h1 class="title">Manage User</h1>
         </div>
         <div class="column" style="height: 60px;">
-          <!-- <button class="button is-success is-pulled-right" v-on:click="modalCreate"><i class="fa fa-user-plus m-r-10"></i> Buat Admin Baru</button> -->
+          <!-- <button class="button is-success is-pulled-right" v-on:click="modalCreate"><i class="fa fa-user-plus m-r-10"></i> Buat user Baru</button> -->
         </div>
       </div>
       <div class="columns m-t-10">
@@ -41,21 +41,22 @@
 
             <tbody>
                   
-                <tr v-for="(admin, index) in filterAdmin " :key="admin.id">
+                <tr v-for="(user, index) in filteruser " :key="user.id">
                   <th>{{ index + 1 + start}}</th>
-                  <td>{{ admin.name }}</td>
-                  <td>{{ admin.email }}</td>
-                  <td>{{ admin.created_at }}</td>
-                  <td><a class="button is-danger" href="#" v-on:click.prevent="modalDelete();setIdDelete(admin)">Hapus</a></td>
+                  <td>{{ user.name }}</td>
+                  <td>{{ user.email }}</td>
+                  <td>{{ user.created_at }}</td>
+                  <td><a class="button " :class="{'is-danger': user.status == 0 , 'is-success': user.status ==1 }" @click="updateStatus(user)"><span v-if="user.status == 0">Belum Verifikasi</span><span v-if="user.status == 1">Sudah Verifikasi</span></a></td>
+                  <td><a class="button is-danger" href="#" v-on:click.prevent="modalDelete();setIdDelete(user)">Hapus</a></td>
                 </tr>
             
             </tbody>
           </table>
           <div class="footer-table-pagination">
-            <!-- <vue-ads-pagination v-if="countAdmin!=0"
+            <!-- <vue-ads-pagination v-if="countuser!=0"
                 :page="0"
                 :itemsPerPage="100"
-                :total-items="countAdmin"
+                :total-items="countuser"
                 :max-visible-pages="3"
                 @page-change="pageChange"
             /> -->
@@ -66,113 +67,19 @@
          
     </div>
 
-    <div  class="modal" v-bind:class="{ 'is-active' : active }">
-      <div class="modal-background" v-on:click="modalCreate" ></div>
-        <div class="modal-card">
-          <header class="modal-card-head">
-            <p class="modal-card-title">Tambahkan Admin</p>
-            <button class="delete" aria-label="close" v-on:click="modalCreate"></button>
-          </header>
-            <form v-on:submit.prevent ="createAdmin()">
-
-            <section class="modal-card-body">
-            
-            <div class="columns">
-              <div class="column">
-                <div class="field">
-                  <label for="name" class="label">Nama</label>
-                  <p class="control">
-                    <input type="text" class="input" v-model="dataAdmin.name" name="name" id="name" required>
-                  </p>
-                </div>
-                <div class="field">
-                  <label for="name" class="label">Username</label>
-                  <p class="control">
-                    <input type="text" class="input" v-model="dataAdmin.username" name="username" id="username" required>
-                  </p>
-                </div>
-
-                <div class="field">
-                  <label for="password" class="label">Password</label>
-                  <p class="control">
-                    <input type="password" class="input" name="password" v-model="dataAdmin.password" id="password" required >
-                  </p>
-                </div>
-
-              </div> <!-- end of .column -->
-            </div> <!-- end of .columns for forms -->       
-          </section>
-          <footer class="modal-card-foot">
-            <button class="button is-success" :class="{'is-loading' : load}" @click="updateLoad()">Buat Admin</button>
-
-            <a class="button is-danger" v-on:click="modalCreate" >Cancel</a>
-          </footer>
-          </form>
-
-      </div>
-    </div>
-    <div  class="modal" v-bind:class="{ 'is-active' : activeUpdate }">
-      <div class="modal-background" v-on:click="modalUpdate()" ></div>
-      
-        <div class="modal-card">
-          <header class="modal-card-head">
-            <p class="modal-card-title">Perbaharui Admin</p>
-            <button class="delete" aria-label="close" v-on:click="modalUpdate()"></button>
-          </header>
-            <form v-on:submit.prevent ="updateAdmin()">
-
-            <section class="modal-card-body">
-            <div class="columns">
-              <div class="column">
-                <div class="field">
-                  <label for="name" class="label">Nama</label>
-                  <p class="control">
-                    <input type="text" class="input" v-model="dataAdmin.name" name="name" id="name" required>
-                  </p>
-                </div>
-                <div class="field">
-                  <label for="name" class="label">Username</label>
-                  <p class="control">
-                    <input type="text" class="input" v-model="dataAdmin.username" name="username" id="username" required>
-                  </p>
-                </div>
-
-                <div class="field">
-                  <label for="password" class="label">Password</label>
-                  <p class="control">
-                    <input type="password" class="input" name="password" v-model="dataAdmin.password" id="password" >
-                  </p>
-                </div>
-                <div class="field">
-                  <p class="control">
-                    <b-checkbox v-model="dataAdmin.password_options" >reset</b-checkbox>
-                  </p>
-                </div>
-
-              </div> <!-- end of .column -->
-            </div> <!-- end of .columns for forms -->       
-          </section>
-          <footer class="modal-card-foot">
-            <button class="button is-success"  :class="{'is-loading' : load}" @click="updateLoad()">Ubah Data</button>
-
-            <a class="button is-danger" v-on:click="modalUpdate()" >Cancel</a>
-          </footer>
-          </form>
-
-      </div>
-    </div>
+    
     <div  class="modal" v-bind:class="{ 'is-active' : activeDelete }">
       <div class="modal-background" v-on:click="modalDelete()" ></div>
       
         <div class="modal-card">
           <header class="modal-card-head">
-            <p class="modal-card-title">Hapus Admin</p>
+            <p class="modal-card-title">Hapus user</p>
             <button class="delete" aria-label="close" v-on:click="modalDelete()"></button>
           </header>
-            <form v-on:submit.prevent ="deleteAdmin()">
+            <form v-on:submit.prevent ="deleteuser()">
 
             <section class="modal-card-body">
-                <p>Admin yang dihapus tidak dapat dikembalikan lagi, apakah anda yakin ingin menghapusnya ? </p>
+                <p>user yang dihapus tidak dapat dikembalikan lagi, apakah anda yakin ingin menghapusnya ? </p>
           </section>
           <footer class="modal-card-foot">
             <button class="button is-warning"  :class="{'is-loading' : load}" @click="updateLoad()">Hapus Data</button>
@@ -199,12 +106,12 @@
                 activeUpdate: false,
                 activeDelete:false,
                 id:'',
-               dataAdmin: [],
-                admins:[],
+               datauser: [],
+                users:[],
                 page: 0,
                 start: 0,
                 end: 0,
-                countAdmin: 0,
+                countuser: 0,
                 load: false,
             }
         },
@@ -212,11 +119,45 @@
           if(localStorage.getItem('roles') == 'user'){
                   this.$router.push({ name: 'DashboardContent' });
           }else{
-            this.getAdmin();
+            this.getuser();
           }
             
         },
          methods: {
+           updateStatus(user){
+             var status 
+             if(user.status == 0){
+               status = 1
+             }else if(user.status == 1){
+               status = 0
+             }
+              let uri = '/api/user/updateStatus/'+this.user.id;
+              axios.patch(uri, {status: status},{
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('token')
+                }
+            }).then((response) => {
+               
+                this.getuser();
+
+                 this.$toast.open({
+                  duration: 2000,
+                  message: response.data.msg,
+                  position: 'is-bottom',
+                  type: 'is-success',
+                  queue: false,
+              })
+              }).catch(error => {
+                this.getuser();
+                  this.$toast.open({
+                  duration: 2000,
+                  message: 'Coba lagi',
+                  position: 'is-bottom',
+                  type: 'is-danger',
+                  queue: false,
+              })
+                });
+           },
            pageChange(page, start, end) {
               this.page = page;
               this.start = start;
@@ -225,7 +166,7 @@
           updateLoad(){
             this.load = true;
           },
-            getAdmin(){
+            getuser(){
               this.load = false;
                   let uri = '/api/user/list/';
                   axios.get(uri,{
@@ -233,8 +174,8 @@
                       Authorization: 'Bearer ' + localStorage.getItem('token')
                   }
               }).then((response) => {
-                      this.admins = response.data;
-                      this.countAdmin = this.admins.length;
+                      this.users = response.data;
+                      this.countuser = this.users.length;
                   }).catch(error => {
                       // console.log(error.response)
                   });
@@ -288,22 +229,22 @@
               this.id = data.id;
             },
             setDataUpdate(data){
-              this.dataAdmin = data;
+              this.datauser = data;
             },
-            createAdmin: function() {
+            createuser: function() {
              
-              let uri = '/api/admin/create';
-              axios.post(uri, this.dataAdmin,{
+              let uri = '/api/user/create';
+              axios.post(uri, this.datauser,{
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('token')
                 }
             }).then((response) => {
                 this.active = false;
-                this.dataAdmin = this.dataAdminNull;
-                   this.getAdmin();
+                this.datauser = this.datauserNull;
+                   this.getuser();
                 this.$toast.open({
                     duration: 2000,
-                    message: 'Admin berhasil di tambahkan',
+                    message: 'user berhasil di tambahkan',
                     position: 'is-bottom',
                     type: 'is-success',
                     queue: false,
@@ -311,8 +252,8 @@
               }).catch(error => {
                 
                 this.active = false;
-                this.dataAdmin = this.dataAdminNull;
-                this.getAdmin();
+                this.datauser = this.datauserNull;
+                this.getuser();
                 this.$toast.open({
                   duration: 2000,
                   message: 'Terjadi Kesalahan, Silahkan coba lagi',
@@ -322,18 +263,18 @@
               })
                 });
             },
-            updateAdmin(){
+            updateuser(){
               
-              let uri = '/api/admin/update/'+this.dataAdmin.id;
-              axios.patch(uri, this.dataAdmin,{
+              let uri = '/api/user/update/'+this.datauser.id;
+              axios.patch(uri, this.datauser,{
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('token')
                 }
             }).then((response) => {
                
                 this.activeUpdate = false;
-                this.dataAdmin = this.dataAdminNull;
-                this.getAdmin();
+                this.datauser = this.datauserNull;
+                this.getuser();
 
                  this.$toast.open({
                   duration: 2000,
@@ -345,8 +286,8 @@
               }).catch(error => {
               
                 this.activeUpdate = false;
-                this.dataAdmin = this.dataAdminNull;
-                this.getAdmin();
+                this.datauser = this.datauserNull;
+                this.getuser();
 
                   this.$toast.open({
                   duration: 2000,
@@ -357,8 +298,8 @@
               })
                 });
             },
-            deleteAdmin(){
-              let uri = '/api/admin/delete/'+this.id;
+            deleteuser(){
+              let uri = '/api/user/delete/'+this.id;
               axios.delete(uri,{
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('token')
@@ -366,7 +307,7 @@
             }).then((response) => {
                 this.activeDelete = false;
                 this.id = '';
-                this.getAdmin();
+                this.getuser();
                 
                   this.$toast.open({
                   duration: 2000,
@@ -378,7 +319,7 @@
               }).catch(error => {
                 this.activeDelete = false;
                 this.id = '';
-                this.getAdmin();
+                this.getuser();
                 
                   this.$toast.open({
                   duration: 2000,
@@ -391,17 +332,17 @@
             }
          },
         computed: {
-            // filterAdmin: function(){
-            //     if(this.admins.length) {
-            //         return this.admins.filter((row, index) => {
+            // filteruser: function(){
+            //     if(this.users.length) {
+            //         return this.users.filter((row, index) => {
             //                 if(this.search != '') return row.name.toLowerCase().includes(this.search.toLowerCase());
             //                 if(index >= this.start && index < this.end) return true;
             //               });
             //     }
             // },
-            filterAdmin: function(){
-                if(this.admins.length) {
-                    return this.admins.filter((row, index) => {
+            filteruser: function(){
+                if(this.users.length) {
+                    return this.users.filter((row, index) => {
                             if(this.search != '') return row.name.toLowerCase().includes(this.search.toLowerCase())
                             else return true;
                           });

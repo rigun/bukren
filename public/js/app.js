@@ -49263,11 +49263,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this = this;
 
             var url = '/api/user/verfikasi/' + this.$route.params.token;
-            axios.get(url, {
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                }
-            }).then(function (response) {
+            axios.get(url).then(function (response) {
                 _this.msg = 'Verifikasi Berhasil Dilakukan';
                 _this.statusMsg = 1;
             }).catch(function (error) {
@@ -53098,99 +53094,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 // import VueAdsPagination from 'vue-ads-pagination';
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -53204,12 +53107,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       activeUpdate: false,
       activeDelete: false,
       id: '',
-      dataAdmin: [],
-      admins: [],
+      datauser: [],
+      users: [],
       page: 0,
       start: 0,
       end: 0,
-      countAdmin: 0,
+      countuser: 0,
       load: false
     };
   },
@@ -53218,10 +53121,46 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     if (localStorage.getItem('roles') == 'user') {
       this.$router.push({ name: 'DashboardContent' });
     } else {
-      this.getAdmin();
+      this.getuser();
     }
   },
   methods: {
+    updateStatus: function updateStatus(user) {
+      var _this = this;
+
+      var status;
+      if (user.status == 0) {
+        status = 1;
+      } else if (user.status == 1) {
+        status = 0;
+      }
+      var uri = '/api/user/updateStatus/' + this.user.id;
+      axios.patch(uri, { status: status }, {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token')
+        }
+      }).then(function (response) {
+
+        _this.getuser();
+
+        _this.$toast.open({
+          duration: 2000,
+          message: response.data.msg,
+          position: 'is-bottom',
+          type: 'is-success',
+          queue: false
+        });
+      }).catch(function (error) {
+        _this.getuser();
+        _this.$toast.open({
+          duration: 2000,
+          message: 'Coba lagi',
+          position: 'is-bottom',
+          type: 'is-danger',
+          queue: false
+        });
+      });
+    },
     pageChange: function pageChange(page, start, end) {
       this.page = page;
       this.start = start;
@@ -53230,8 +53169,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     updateLoad: function updateLoad() {
       this.load = true;
     },
-    getAdmin: function getAdmin() {
-      var _this = this;
+    getuser: function getuser() {
+      var _this2 = this;
 
       this.load = false;
       var uri = '/api/user/list/';
@@ -53240,8 +53179,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           Authorization: 'Bearer ' + localStorage.getItem('token')
         }
       }).then(function (response) {
-        _this.admins = response.data;
-        _this.countAdmin = _this.admins.length;
+        _this2.users = response.data;
+        _this2.countuser = _this2.users.length;
       }).catch(function (error) {
         // console.log(error.response)
       });
@@ -53296,34 +53235,34 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.id = data.id;
     },
     setDataUpdate: function setDataUpdate(data) {
-      this.dataAdmin = data;
+      this.datauser = data;
     },
 
-    createAdmin: function createAdmin() {
-      var _this2 = this;
+    createuser: function createuser() {
+      var _this3 = this;
 
-      var uri = '/api/admin/create';
-      axios.post(uri, this.dataAdmin, {
+      var uri = '/api/user/create';
+      axios.post(uri, this.datauser, {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token')
         }
       }).then(function (response) {
-        _this2.active = false;
-        _this2.dataAdmin = _this2.dataAdminNull;
-        _this2.getAdmin();
-        _this2.$toast.open({
+        _this3.active = false;
+        _this3.datauser = _this3.datauserNull;
+        _this3.getuser();
+        _this3.$toast.open({
           duration: 2000,
-          message: 'Admin berhasil di tambahkan',
+          message: 'user berhasil di tambahkan',
           position: 'is-bottom',
           type: 'is-success',
           queue: false
         });
       }).catch(function (error) {
 
-        _this2.active = false;
-        _this2.dataAdmin = _this2.dataAdminNull;
-        _this2.getAdmin();
-        _this2.$toast.open({
+        _this3.active = false;
+        _this3.datauser = _this3.datauserNull;
+        _this3.getuser();
+        _this3.$toast.open({
           duration: 2000,
           message: 'Terjadi Kesalahan, Silahkan coba lagi',
           position: 'is-bottom',
@@ -53332,21 +53271,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         });
       });
     },
-    updateAdmin: function updateAdmin() {
-      var _this3 = this;
+    updateuser: function updateuser() {
+      var _this4 = this;
 
-      var uri = '/api/admin/update/' + this.dataAdmin.id;
-      axios.patch(uri, this.dataAdmin, {
+      var uri = '/api/user/update/' + this.datauser.id;
+      axios.patch(uri, this.datauser, {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token')
         }
       }).then(function (response) {
 
-        _this3.activeUpdate = false;
-        _this3.dataAdmin = _this3.dataAdminNull;
-        _this3.getAdmin();
+        _this4.activeUpdate = false;
+        _this4.datauser = _this4.datauserNull;
+        _this4.getuser();
 
-        _this3.$toast.open({
+        _this4.$toast.open({
           duration: 2000,
           message: response.data.msg,
           position: 'is-bottom',
@@ -53355,11 +53294,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         });
       }).catch(function (error) {
 
-        _this3.activeUpdate = false;
-        _this3.dataAdmin = _this3.dataAdminNull;
-        _this3.getAdmin();
+        _this4.activeUpdate = false;
+        _this4.datauser = _this4.datauserNull;
+        _this4.getuser();
 
-        _this3.$toast.open({
+        _this4.$toast.open({
           duration: 2000,
           message: 'Coba lagi dengan username yang berbeda',
           position: 'is-bottom',
@@ -53368,20 +53307,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         });
       });
     },
-    deleteAdmin: function deleteAdmin() {
-      var _this4 = this;
+    deleteuser: function deleteuser() {
+      var _this5 = this;
 
-      var uri = '/api/admin/delete/' + this.id;
+      var uri = '/api/user/delete/' + this.id;
       axios.delete(uri, {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token')
         }
       }).then(function (response) {
-        _this4.activeDelete = false;
-        _this4.id = '';
-        _this4.getAdmin();
+        _this5.activeDelete = false;
+        _this5.id = '';
+        _this5.getuser();
 
-        _this4.$toast.open({
+        _this5.$toast.open({
           duration: 2000,
           message: 'Berhasil di hapus',
           position: 'is-bottom',
@@ -53389,11 +53328,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           queue: false
         });
       }).catch(function (error) {
-        _this4.activeDelete = false;
-        _this4.id = '';
-        _this4.getAdmin();
+        _this5.activeDelete = false;
+        _this5.id = '';
+        _this5.getuser();
 
-        _this4.$toast.open({
+        _this5.$toast.open({
           duration: 2000,
           message: 'Coba lagi',
           position: 'is-bottom',
@@ -53404,20 +53343,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     }
   },
   computed: {
-    // filterAdmin: function(){
-    //     if(this.admins.length) {
-    //         return this.admins.filter((row, index) => {
+    // filteruser: function(){
+    //     if(this.users.length) {
+    //         return this.users.filter((row, index) => {
     //                 if(this.search != '') return row.name.toLowerCase().includes(this.search.toLowerCase());
     //                 if(index >= this.start && index < this.end) return true;
     //               });
     //     }
     // },
-    filterAdmin: function filterAdmin() {
-      var _this5 = this;
+    filteruser: function filteruser() {
+      var _this6 = this;
 
-      if (this.admins.length) {
-        return this.admins.filter(function (row, index) {
-          if (_this5.search != '') return row.name.toLowerCase().includes(_this5.search.toLowerCase());else return true;
+      if (this.users.length) {
+        return this.users.filter(function (row, index) {
+          if (_this6.search != '') return row.name.toLowerCase().includes(_this6.search.toLowerCase());else return true;
         });
       }
     }
@@ -53477,15 +53416,41 @@ var render = function() {
             _vm._v(" "),
             _c(
               "tbody",
-              _vm._l(_vm.filterAdmin, function(admin, index) {
-                return _c("tr", { key: admin.id }, [
+              _vm._l(_vm.filteruser, function(user, index) {
+                return _c("tr", { key: user.id }, [
                   _c("th", [_vm._v(_vm._s(index + 1 + _vm.start))]),
                   _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(admin.name))]),
+                  _c("td", [_vm._v(_vm._s(user.name))]),
                   _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(admin.email))]),
+                  _c("td", [_vm._v(_vm._s(user.email))]),
                   _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(admin.created_at))]),
+                  _c("td", [_vm._v(_vm._s(user.created_at))]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c(
+                      "a",
+                      {
+                        staticClass: "button ",
+                        class: {
+                          "is-danger": user.status == 0,
+                          "is-success": user.status == 1
+                        },
+                        on: {
+                          click: function($event) {
+                            _vm.updateStatus(user)
+                          }
+                        }
+                      },
+                      [
+                        user.status == 0
+                          ? _c("span", [_vm._v("Belum Verifikasi")])
+                          : _vm._e(),
+                        user.status == 1
+                          ? _c("span", [_vm._v("Sudah Verifikasi")])
+                          : _vm._e()
+                      ]
+                    )
+                  ]),
                   _vm._v(" "),
                   _c("td", [
                     _c(
@@ -53497,7 +53462,7 @@ var render = function() {
                           click: function($event) {
                             $event.preventDefault()
                             _vm.modalDelete()
-                            _vm.setIdDelete(admin)
+                            _vm.setIdDelete(user)
                           }
                         }
                       },
@@ -53513,420 +53478,6 @@ var render = function() {
         ])
       ])
     ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "modal", class: { "is-active": _vm.active } }, [
-      _c("div", {
-        staticClass: "modal-background",
-        on: { click: _vm.modalCreate }
-      }),
-      _vm._v(" "),
-      _c("div", { staticClass: "modal-card" }, [
-        _c("header", { staticClass: "modal-card-head" }, [
-          _c("p", { staticClass: "modal-card-title" }, [
-            _vm._v("Tambahkan Admin")
-          ]),
-          _vm._v(" "),
-          _c("button", {
-            staticClass: "delete",
-            attrs: { "aria-label": "close" },
-            on: { click: _vm.modalCreate }
-          })
-        ]),
-        _vm._v(" "),
-        _c(
-          "form",
-          {
-            on: {
-              submit: function($event) {
-                $event.preventDefault()
-                _vm.createAdmin()
-              }
-            }
-          },
-          [
-            _c("section", { staticClass: "modal-card-body" }, [
-              _c("div", { staticClass: "columns" }, [
-                _c("div", { staticClass: "column" }, [
-                  _c("div", { staticClass: "field" }, [
-                    _c(
-                      "label",
-                      { staticClass: "label", attrs: { for: "name" } },
-                      [_vm._v("Nama")]
-                    ),
-                    _vm._v(" "),
-                    _c("p", { staticClass: "control" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.dataAdmin.name,
-                            expression: "dataAdmin.name"
-                          }
-                        ],
-                        staticClass: "input",
-                        attrs: {
-                          type: "text",
-                          name: "name",
-                          id: "name",
-                          required: ""
-                        },
-                        domProps: { value: _vm.dataAdmin.name },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(_vm.dataAdmin, "name", $event.target.value)
-                          }
-                        }
-                      })
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "field" }, [
-                    _c(
-                      "label",
-                      { staticClass: "label", attrs: { for: "name" } },
-                      [_vm._v("Username")]
-                    ),
-                    _vm._v(" "),
-                    _c("p", { staticClass: "control" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.dataAdmin.username,
-                            expression: "dataAdmin.username"
-                          }
-                        ],
-                        staticClass: "input",
-                        attrs: {
-                          type: "text",
-                          name: "username",
-                          id: "username",
-                          required: ""
-                        },
-                        domProps: { value: _vm.dataAdmin.username },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(
-                              _vm.dataAdmin,
-                              "username",
-                              $event.target.value
-                            )
-                          }
-                        }
-                      })
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "field" }, [
-                    _c(
-                      "label",
-                      { staticClass: "label", attrs: { for: "password" } },
-                      [_vm._v("Password")]
-                    ),
-                    _vm._v(" "),
-                    _c("p", { staticClass: "control" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.dataAdmin.password,
-                            expression: "dataAdmin.password"
-                          }
-                        ],
-                        staticClass: "input",
-                        attrs: {
-                          type: "password",
-                          name: "password",
-                          id: "password",
-                          required: ""
-                        },
-                        domProps: { value: _vm.dataAdmin.password },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(
-                              _vm.dataAdmin,
-                              "password",
-                              $event.target.value
-                            )
-                          }
-                        }
-                      })
-                    ])
-                  ])
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("footer", { staticClass: "modal-card-foot" }, [
-              _c(
-                "button",
-                {
-                  staticClass: "button is-success",
-                  class: { "is-loading": _vm.load },
-                  on: {
-                    click: function($event) {
-                      _vm.updateLoad()
-                    }
-                  }
-                },
-                [_vm._v("Buat Admin")]
-              ),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  staticClass: "button is-danger",
-                  on: { click: _vm.modalCreate }
-                },
-                [_vm._v("Cancel")]
-              )
-            ])
-          ]
-        )
-      ])
-    ]),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "modal", class: { "is-active": _vm.activeUpdate } },
-      [
-        _c("div", {
-          staticClass: "modal-background",
-          on: {
-            click: function($event) {
-              _vm.modalUpdate()
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c("div", { staticClass: "modal-card" }, [
-          _c("header", { staticClass: "modal-card-head" }, [
-            _c("p", { staticClass: "modal-card-title" }, [
-              _vm._v("Perbaharui Admin")
-            ]),
-            _vm._v(" "),
-            _c("button", {
-              staticClass: "delete",
-              attrs: { "aria-label": "close" },
-              on: {
-                click: function($event) {
-                  _vm.modalUpdate()
-                }
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c(
-            "form",
-            {
-              on: {
-                submit: function($event) {
-                  $event.preventDefault()
-                  _vm.updateAdmin()
-                }
-              }
-            },
-            [
-              _c("section", { staticClass: "modal-card-body" }, [
-                _c("div", { staticClass: "columns" }, [
-                  _c("div", { staticClass: "column" }, [
-                    _c("div", { staticClass: "field" }, [
-                      _c(
-                        "label",
-                        { staticClass: "label", attrs: { for: "name" } },
-                        [_vm._v("Nama")]
-                      ),
-                      _vm._v(" "),
-                      _c("p", { staticClass: "control" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.dataAdmin.name,
-                              expression: "dataAdmin.name"
-                            }
-                          ],
-                          staticClass: "input",
-                          attrs: {
-                            type: "text",
-                            name: "name",
-                            id: "name",
-                            required: ""
-                          },
-                          domProps: { value: _vm.dataAdmin.name },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.$set(
-                                _vm.dataAdmin,
-                                "name",
-                                $event.target.value
-                              )
-                            }
-                          }
-                        })
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "field" }, [
-                      _c(
-                        "label",
-                        { staticClass: "label", attrs: { for: "name" } },
-                        [_vm._v("Username")]
-                      ),
-                      _vm._v(" "),
-                      _c("p", { staticClass: "control" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.dataAdmin.username,
-                              expression: "dataAdmin.username"
-                            }
-                          ],
-                          staticClass: "input",
-                          attrs: {
-                            type: "text",
-                            name: "username",
-                            id: "username",
-                            required: ""
-                          },
-                          domProps: { value: _vm.dataAdmin.username },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.$set(
-                                _vm.dataAdmin,
-                                "username",
-                                $event.target.value
-                              )
-                            }
-                          }
-                        })
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "field" }, [
-                      _c(
-                        "label",
-                        { staticClass: "label", attrs: { for: "password" } },
-                        [_vm._v("Password")]
-                      ),
-                      _vm._v(" "),
-                      _c("p", { staticClass: "control" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.dataAdmin.password,
-                              expression: "dataAdmin.password"
-                            }
-                          ],
-                          staticClass: "input",
-                          attrs: {
-                            type: "password",
-                            name: "password",
-                            id: "password"
-                          },
-                          domProps: { value: _vm.dataAdmin.password },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.$set(
-                                _vm.dataAdmin,
-                                "password",
-                                $event.target.value
-                              )
-                            }
-                          }
-                        })
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "field" }, [
-                      _c(
-                        "p",
-                        { staticClass: "control" },
-                        [
-                          _c(
-                            "b-checkbox",
-                            {
-                              model: {
-                                value: _vm.dataAdmin.password_options,
-                                callback: function($$v) {
-                                  _vm.$set(
-                                    _vm.dataAdmin,
-                                    "password_options",
-                                    $$v
-                                  )
-                                },
-                                expression: "dataAdmin.password_options"
-                              }
-                            },
-                            [_vm._v("reset")]
-                          )
-                        ],
-                        1
-                      )
-                    ])
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("footer", { staticClass: "modal-card-foot" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "button is-success",
-                    class: { "is-loading": _vm.load },
-                    on: {
-                      click: function($event) {
-                        _vm.updateLoad()
-                      }
-                    }
-                  },
-                  [_vm._v("Ubah Data")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "a",
-                  {
-                    staticClass: "button is-danger",
-                    on: {
-                      click: function($event) {
-                        _vm.modalUpdate()
-                      }
-                    }
-                  },
-                  [_vm._v("Cancel")]
-                )
-              ])
-            ]
-          )
-        ])
-      ]
-    ),
     _vm._v(" "),
     _c(
       "div",
@@ -53944,7 +53495,7 @@ var render = function() {
         _c("div", { staticClass: "modal-card" }, [
           _c("header", { staticClass: "modal-card-head" }, [
             _c("p", { staticClass: "modal-card-title" }, [
-              _vm._v("Hapus Admin")
+              _vm._v("Hapus user")
             ]),
             _vm._v(" "),
             _c("button", {
@@ -53964,7 +53515,7 @@ var render = function() {
               on: {
                 submit: function($event) {
                   $event.preventDefault()
-                  _vm.deleteAdmin()
+                  _vm.deleteuser()
                 }
               }
             },
@@ -54054,7 +53605,7 @@ var staticRenderFns = [
     return _c("section", { staticClass: "modal-card-body" }, [
       _c("p", [
         _vm._v(
-          "Admin yang dihapus tidak dapat dikembalikan lagi, apakah anda yakin ingin menghapusnya ? "
+          "user yang dihapus tidak dapat dikembalikan lagi, apakah anda yakin ingin menghapusnya ? "
         )
       ])
     ])

@@ -20,6 +20,8 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('refresh', 'AuthController@refresh');
     Route::get('user', 'UserController@getAuthenticatedUser');
     Route::get('/user/list', 'UserController@index');
+    Route::delete('/user/delete/{id}', 'UserController@destroy');
+    Route::patch('/user/updateStatus/{id}', 'UserController@updateStatus');
     Route::get('/user/detail/', 'UserDetailController@index');
     Route::post('/user/detail/', 'UserDetailController@store');
     Route::get('/penerima/detail/{token}', 'UserDetailController@showByChatToken');

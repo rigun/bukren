@@ -124,7 +124,15 @@ class UserController extends Controller
           }
           return response()->json($json);
     }
-
+    public function updateStatus(Request $request, $id){
+        $this->validateWith([
+            'status' => 'required'
+        ]);
+        $user = User::findOrFail($id);
+        $user->status = $request->status;
+        $user->save();
+        return $user;
+    }
     public function updatePassword(Request $request, $id)
     {
         $this->validateWith([
