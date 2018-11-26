@@ -46,11 +46,7 @@ export default {
     methods:{
         sendVerifikasi(){
             let url = '/api/user/verfikasi/'+ this.$route.params.token;
-               axios.get(url,{
-                   headers: {
-                        Authorization: 'Bearer ' + localStorage.getItem('token')
-                    }
-                }).then((response) => {
+               axios.get(url).then((response) => {
                     this.msg = 'Verifikasi Berhasil Dilakukan';
                     this.statusMsg = 1;
                 })

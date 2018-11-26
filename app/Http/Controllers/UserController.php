@@ -21,7 +21,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::with('detail')->whereRoleIs('user')->get();
+        $users = User::with('detail')->whereRoleIs('pengguna')->get();
         return $users;
     }
 
