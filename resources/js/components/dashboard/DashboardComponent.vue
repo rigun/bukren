@@ -157,6 +157,9 @@ ul{
     margin-left: 0px;
     margin-top: 0px;
 }
+ul button{
+    width: 100%;
+}
 </style>
 
 <script>
@@ -272,6 +275,7 @@ const ModalForm = {
 
     export default {
         components:{
+            ModalForm,
             Carousel,
             Slide,
         },

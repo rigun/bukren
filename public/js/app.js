@@ -52297,6 +52297,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 
 
@@ -52360,6 +52363,7 @@ var ModalForm = {
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
+        ModalForm: ModalForm,
         Carousel: __WEBPACK_IMPORTED_MODULE_0_vue_carousel__["Carousel"],
         Slide: __WEBPACK_IMPORTED_MODULE_0_vue_carousel__["Slide"]
     },
@@ -59408,7 +59412,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\nul[data-v-1c27d7e2]{\r\n    list-style: none;\r\n    margin-left: 0px;\r\n    margin-top: 0px;\n}\r\n", ""]);
+exports.push([module.i, "\nul[data-v-1c27d7e2]{\r\n    list-style: none;\r\n    margin-left: 0px;\r\n    margin-top: 0px;\n}\nul button[data-v-1c27d7e2]{\r\n    width: 100%;\n}\r\n", ""]);
 
 // exports
 
