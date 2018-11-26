@@ -131,7 +131,7 @@
                                     <button class="button button-primary is-danger" @click="deleteKategori(kategori.id)">Hapus Foto </button>
                                 </li>
                                 <li>
-                                    <button class="button button-primary is-warning" @click="editKategori(kategori)">Edit Kategori</button>
+                                    <button class="button button-primary is-warning" @click="editKategoriFunc(kategori)">Edit Kategori</button>
                                 </li>
                                 <li>
                                     <button class="button button-primary is-info" @click="copyToClipboard(kategori.filename,'/images/kategori/')">Copy link</button>
@@ -151,15 +151,14 @@
 </div> <!-- end of container-->
 </div>
 </template>
-<style>
-    ul{
-        margin: 0px;
-        list-style: none;
-    }
-    ul button{
-        width: 100%;
-    }
+<style scoped>
+ul{
+    list-style: none;
+    margin-left: 0px;
+    margin-top: 0px;
+}
 </style>
+
 <script>
 import { Carousel, Slide } from 'vue-carousel';
 
@@ -289,7 +288,7 @@ const ModalForm = {
                 kategoriColors :'#333',
                 kategoriName : '',
                 isComponentModalActive: false,
-                editKategori : {}
+                editKategori : null
             }
         },
         mounted(){
@@ -298,7 +297,7 @@ const ModalForm = {
          
         },
         methods:{
-            editKategori(kategori){
+            editKategoriFunc(kategori){
                 this.isComponentModalActive = true;
                 this.editKategori = kategori
             },
