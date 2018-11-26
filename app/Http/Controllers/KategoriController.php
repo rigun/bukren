@@ -102,7 +102,7 @@ class KategoriController extends Controller
     public function update(Request $request, $id)
     {
         $this->validateWith([
-            'name' => 'required|max:255|unique:kategoris',
+            'name' => 'required',
           ]);
           $item = Kategori::find($id);
               if (empty($item)) {
@@ -133,7 +133,7 @@ class KategoriController extends Controller
                     $item->filename = $save_name;
                     $item->originalName = basename($photo->getClientOriginalName());
                 }
-              $kategori->name = $request->name;
+              $item->name = $request->name;
               $item->save();
     
               return $item;
