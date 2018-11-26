@@ -53434,12 +53434,12 @@ var render = function() {
                         class: {
                           "is-danger": user.status == 0,
                           "is-success": user.status == 1,
-                          "is-loading": _vm.load
+                          "is-loading": _vm.load == user.id
                         },
                         on: {
                           click: function($event) {
                             _vm.updateStatus(user)
-                            _vm.load = true
+                            _vm.load = user.id
                           }
                         }
                       },
