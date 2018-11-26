@@ -52321,7 +52321,7 @@ var ModalForm = {
     methods: {
         setData: function setData() {
             this.editImage = this.kategori.filename;
-            this.kategoriName = this.kategori.kategoriName;
+            this.kategoriName = this.kategori.name;
         },
         senddata: function senddata() {
             var _this = this;

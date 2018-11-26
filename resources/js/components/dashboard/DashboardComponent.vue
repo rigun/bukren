@@ -235,7 +235,7 @@ const ModalForm = {
         methods:{
             setData(){
                 this.editImage = this.kategori.filename
-                this.kategoriName = this.kategori.kategoriName
+                this.kategoriName = this.kategori.name
             },
             senddata(){
                  let formData = new FormData();
