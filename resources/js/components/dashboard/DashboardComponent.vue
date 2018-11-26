@@ -238,11 +238,12 @@ const ModalForm = {
                 this.kategoriName = this.kategori.name
             },
             senddata(){
-                 let formData = new FormData();
+                 var formData = new FormData();
                  if(this.editImage == null){
                      formData.append('file',  this.kategoriImage);
                  }
                  formData.append('name',  this.kategoriName);
+                    console.log(formData)
                     var uri = '/api/kategori/'+this.kategori.id;
                     axios.patch(uri,formData,{
                 headers: {
