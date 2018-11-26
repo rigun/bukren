@@ -52082,6 +52082,10 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(162)
+}
 var normalizeComponent = __webpack_require__(0)
 /* script */
 var __vue_script__ = __webpack_require__(95)
@@ -52090,7 +52094,7 @@ var __vue_template__ = __webpack_require__(96)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
-var __vue_styles__ = null
+var __vue_styles__ = injectStyle
 /* scopeId */
 var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
@@ -52286,7 +52290,74 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
+
+
+var ModalForm = {
+    props: ['kategori'],
+    data: function data() {
+        return {
+            load: false,
+            kategoriImage: null,
+            kategoriName: '',
+            editImage: null
+        };
+    },
+    mounted: function mounted() {
+        this.setData();
+    },
+
+    template: '\n            <form @submit.prevent="senddata();load = true">\n                <div class="modal-card">\n                    <header class="modal-card-head">\n                        <p class="modal-card-title" >Add kategori</p>\n                    </header>\n                    <section class="modal-card-body">\n                        <div v-if="kategoriImage == null && editImage == null" >\n                                <b-field >\n                                    <b-upload v-model="kategoriImage"\n                                        drag-drop >\n                                        <section class="section">\n                                            <div class="content has-text-centered">\n                                                <p>\n                                                    <b-icon\n                                                        icon="upload"\n                                                        size="is-large">\n                                                    </b-icon>\n                                                </p>\n                                                <p>Drop your files here or click to upload</p>\n                                            </div>\n                                        </section>\n                                    </b-upload>\n                                </b-field>\n                        </div>\n                        <div style="text-align:center;" v-else-if="editImage == null">\n                            <img style="width: 150px" :src="previewKategori" alt="img">\n                            <a @click="kategoriImage = null" class="button is-danger">Ganti</a>\n                        </div>\n                        <div style="text-align:center;" v-else-if="editImage != null">\n                            <img style="width: 150px" :src="\'/images/kategori/\'+editImage" alt="img">\n                            <a @click="editImage = null" class="button is-danger">Ganti</a>\n                        </div>\n                            <div class="columns is-multiline">\n                                <div class="column is-three-quarters">\n                                    <div class="field">\n                                        <label class="label" >Nama Kategori</label>\n                                        <div class="control">\n                                            <input class="input" type="text" v-model="kategoriName" placeholder="Name">\n                                        </div>\n                                        \n                                    </div>\n                                \n                                </div>\n                            </div>\n                            \n                    </section>\n                    <footer class="modal-card-foot">\n                        <button class="button is-fullwidth" type="button" @click="$parent.close()">Close</button>\n                        <button class="button is-primary is-fullwidth" :class="{\'is-loading\' : load}" >Edit</button>\n                    </footer>\n                </div>\n            </form>\n        ',
+    methods: {
+        setData: function setData() {
+            this.editImage = this.kategori.filename;
+            this.kategoriName = this.kategori.kategoriName;
+        },
+        senddata: function senddata() {
+            var _this = this;
+
+            var formData = new FormData();
+            if (this.editImage == null) {
+                formData.append('file', this.kategoriImage);
+            }
+            formData.append('kategoriName', this.kategoriName);
+            var uri = '/api/kategori/' + this.kategori.id;
+            axios.patch(uri, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: 'Bearer ' + localStorage.getItem('token')
+                }
+            }).then(function (response) {
+                _this.load = false;
+                _this.$parent.close();
+                _this.$emit('get-kategori');
+            }).catch(function (error) {
+                _this.load = false;
+                _this.$parent.close();
+                _this.$toast.open({
+                    duration: 2000,
+                    message: error,
+                    position: 'is-bottom',
+                    type: 'is-danger',
+                    queue: false
+                });
+            });
+        }
+    },
+    computed: {
+        previewBarang: function previewBarang() {
+            return URL.createObjectURL(this.kategoriImage);
+        }
+    }
+};
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -52304,8 +52375,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             kategoris: [],
             kategoriImage: null,
             kategoriColors: '#333',
-            kategoriName: ''
-
+            kategoriName: '',
+            isComponentModalActive: false,
+            editKategori: {}
         };
     },
     mounted: function mounted() {
@@ -52314,8 +52386,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     methods: {
+        editKategori: function editKategori(kategori) {
+            this.isComponentModalActive = true;
+            this.editKategori = kategori;
+        },
         uploadSlider: function uploadSlider() {
-            var _this = this;
+            var _this2 = this;
 
             var formData = new FormData();
             formData.append('file', this.sliderImage);
@@ -52326,15 +52402,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     Authorization: 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(function (response) {
-                _this.sliderImage = null;
-                _this.getSlider();
+                _this2.sliderImage = null;
+                _this2.getSlider();
             }).catch(function (error) {
-                _this.sliderImage = null;
+                _this2.sliderImage = null;
                 console.log(error);
             });
         },
         getSlider: function getSlider() {
-            var _this2 = this;
+            var _this3 = this;
 
             var url = '/api/slider';
             axios.get(url, {
@@ -52342,11 +52418,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     Authorization: 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(function (response) {
-                _this2.sliders = response.data;
-                for (var i = 0; i < _this2.sliders.length; i++) {
-                    var index = _this2.numbers.indexOf(_this2.sliders[i].urutan);
+                _this3.sliders = response.data;
+                for (var i = 0; i < _this3.sliders.length; i++) {
+                    var index = _this3.numbers.indexOf(_this3.sliders[i].urutan);
                     if (index !== -1) {
-                        _this2.numbers.splice(index, 1);
+                        _this3.numbers.splice(index, 1);
                     }
                 }
             }).catch(function (error) {
@@ -52354,7 +52430,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         deletePicture: function deletePicture(id, urutan) {
-            var _this3 = this;
+            var _this4 = this;
 
             this.$toast.open({
                 duration: 500,
@@ -52369,15 +52445,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     Authorization: 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(function (response) {
-                _this3.$toast.open({
+                _this4.$toast.open({
                     message: 'Berhasil di hapus',
                     position: 'is-bottom',
                     type: 'is-success'
                 });
-                _this3.numbers.push(urutan);
-                _this3.getSlider();
+                _this4.numbers.push(urutan);
+                _this4.getSlider();
             }).catch(function (error) {
-                _this3.$toast.open({
+                _this4.$toast.open({
                     message: 'Silahkan coba lagi',
                     position: 'is-bottom',
                     type: 'is-danger'
@@ -52414,7 +52490,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             document.body.removeChild(temp);
         },
         uploadKategori: function uploadKategori() {
-            var _this4 = this;
+            var _this5 = this;
 
             var formData = new FormData();
             formData.append('file', this.kategoriImage);
@@ -52425,15 +52501,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     Authorization: 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(function (response) {
-                _this4.kategoriImage = null;
-                _this4.getKategori();
+                _this5.kategoriImage = null;
+                _this5.getKategori();
             }).catch(function (error) {
-                _this4.kategoriImage = null;
+                _this5.kategoriImage = null;
                 console.log(error);
             });
         },
         getKategori: function getKategori() {
-            var _this5 = this;
+            var _this6 = this;
 
             var url = '/api/kategori';
             axios.get(url, {
@@ -52441,13 +52517,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     Authorization: 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(function (response) {
-                _this5.kategoris = response.data;
+                _this6.kategoris = response.data;
             }).catch(function (error) {
                 console.log(error);
             });
         },
         deleteKategori: function deleteKategori(id) {
-            var _this6 = this;
+            var _this7 = this;
 
             this.$toast.open({
                 duration: 500,
@@ -52462,14 +52538,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     Authorization: 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(function (response) {
-                _this6.$toast.open({
+                _this7.$toast.open({
                     message: 'Berhasil di hapus',
                     position: 'is-bottom',
                     type: 'is-success'
                 });
-                _this6.getKategori();
+                _this7.getKategori();
             }).catch(function (error) {
-                _this6.$toast.open({
+                _this7.$toast.open({
                     message: 'Silahkan coba lagi',
                     position: 'is-bottom',
                     type: 'is-danger'
@@ -52499,157 +52575,351 @@ var render = function() {
     "div",
     { staticClass: "contentlist", attrs: { id: "dashboarComponent" } },
     [
-      _c("div", { staticClass: "flex-container" }, [
-        _vm._m(0),
-        _vm._v(" "),
-        _c("div", { staticClass: "columns" }, [
-          _vm.numbers.length != 0
-            ? _c("div", { staticClass: "column is-one-quarter" }, [
-                _vm.sliderImage == null && _vm.numbers.length != 0
-                  ? _c(
-                      "div",
-                      [
-                        _c(
-                          "b-field",
-                          [
-                            _c(
-                              "b-upload",
-                              {
-                                attrs: { "drag-drop": "" },
-                                model: {
-                                  value: _vm.sliderImage,
-                                  callback: function($$v) {
-                                    _vm.sliderImage = $$v
-                                  },
-                                  expression: "sliderImage"
-                                }
-                              },
-                              [
-                                _c("section", { staticClass: "section" }, [
-                                  _c(
-                                    "div",
-                                    {
-                                      staticClass: "content has-text-centered"
+      _c(
+        "div",
+        { staticClass: "flex-container" },
+        [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "columns" }, [
+            _vm.numbers.length != 0
+              ? _c("div", { staticClass: "column is-one-quarter" }, [
+                  _vm.sliderImage == null && _vm.numbers.length != 0
+                    ? _c(
+                        "div",
+                        [
+                          _c(
+                            "b-field",
+                            [
+                              _c(
+                                "b-upload",
+                                {
+                                  attrs: { "drag-drop": "" },
+                                  model: {
+                                    value: _vm.sliderImage,
+                                    callback: function($$v) {
+                                      _vm.sliderImage = $$v
                                     },
-                                    [
-                                      _c(
-                                        "p",
-                                        [
-                                          _c("b-icon", {
-                                            attrs: {
-                                              icon: "upload",
-                                              size: "is-large"
-                                            }
-                                          })
-                                        ],
-                                        1
-                                      ),
-                                      _vm._v(" "),
-                                      _c("p", [
-                                        _vm._v(
-                                          "Drop your files here or click to upload"
-                                        )
-                                      ])
-                                    ]
-                                  )
-                                ])
-                              ]
-                            )
-                          ],
-                          1
-                        )
-                      ],
-                      1
-                    )
-                  : _vm._e(),
-                _vm._v(" "),
-                _vm.sliderImage != null && _vm.numbers.length != 0
-                  ? _c("div", [
-                      _c("img", {
-                        staticStyle: { width: "150px" },
-                        attrs: { src: _vm.preview, alt: "" }
-                      }),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "columns is-multiline" }, [
-                        _c("div", { staticClass: "column is-full" }, [
-                          _c("div", { staticClass: "select " }, [
-                            _c(
-                              "select",
-                              {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.urutan,
-                                    expression: "urutan"
+                                    expression: "sliderImage"
                                   }
-                                ],
-                                on: {
-                                  change: function($event) {
-                                    var $$selectedVal = Array.prototype.filter
-                                      .call($event.target.options, function(o) {
-                                        return o.selected
-                                      })
-                                      .map(function(o) {
-                                        var val =
-                                          "_value" in o ? o._value : o.value
-                                        return val
-                                      })
-                                    _vm.urutan = $event.target.multiple
-                                      ? $$selectedVal
-                                      : $$selectedVal[0]
-                                  }
-                                }
-                              },
-                              [
-                                _c(
-                                  "option",
-                                  { attrs: { value: "0", hidden: "" } },
-                                  [_vm._v("Pilih salah satu")]
-                                ),
-                                _vm._v(" "),
-                                _vm._l(_vm.numbers, function(number) {
-                                  return _c("option", { key: number }, [
-                                    _vm._v(_vm._s(number))
+                                },
+                                [
+                                  _c("section", { staticClass: "section" }, [
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass: "content has-text-centered"
+                                      },
+                                      [
+                                        _c(
+                                          "p",
+                                          [
+                                            _c("b-icon", {
+                                              attrs: {
+                                                icon: "upload",
+                                                size: "is-large"
+                                              }
+                                            })
+                                          ],
+                                          1
+                                        ),
+                                        _vm._v(" "),
+                                        _c("p", [
+                                          _vm._v(
+                                            "Drop your files here or click to upload"
+                                          )
+                                        ])
+                                      ]
+                                    )
                                   ])
-                                })
-                              ],
-                              2
+                                ]
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.sliderImage != null && _vm.numbers.length != 0
+                    ? _c("div", [
+                        _c("img", {
+                          staticStyle: { width: "150px" },
+                          attrs: { src: _vm.preview, alt: "" }
+                        }),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "columns is-multiline" }, [
+                          _c("div", { staticClass: "column is-full" }, [
+                            _c("div", { staticClass: "select " }, [
+                              _c(
+                                "select",
+                                {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.urutan,
+                                      expression: "urutan"
+                                    }
+                                  ],
+                                  on: {
+                                    change: function($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.urutan = $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    }
+                                  }
+                                },
+                                [
+                                  _c(
+                                    "option",
+                                    { attrs: { value: "0", hidden: "" } },
+                                    [_vm._v("Pilih salah satu")]
+                                  ),
+                                  _vm._v(" "),
+                                  _vm._l(_vm.numbers, function(number) {
+                                    return _c("option", { key: number }, [
+                                      _vm._v(_vm._s(number))
+                                    ])
+                                  })
+                                ],
+                                2
+                              )
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "column is-full" }, [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "button button-success",
+                                on: { click: _vm.uploadSlider }
+                              },
+                              [_vm._v("Upload")]
                             )
                           ])
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "column is-full" }, [
-                          _c(
-                            "button",
-                            {
-                              staticClass: "button button-success",
-                              on: { click: _vm.uploadSlider }
-                            },
-                            [_vm._v("Upload")]
-                          )
                         ])
                       ])
-                    ])
-                  : _vm._e()
-              ])
-            : _vm._e(),
+                    : _vm._e()
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "column",
+                class: {
+                  "is-three-quarters": _vm.numbers.length != 0,
+                  " is-full": _vm.numbers.length == 0
+                }
+              },
+              [
+                _c(
+                  "div",
+                  { staticClass: "box" },
+                  [
+                    _vm._m(1),
+                    _vm._v(" "),
+                    _c(
+                      "carousel",
+                      {
+                        attrs: {
+                          perPage: 3,
+                          navigationEnabled: true,
+                          paginationEnabled: false
+                        }
+                      },
+                      _vm._l(_vm.sliders, function(slider) {
+                        return _c("slide", { key: slider.id }, [
+                          _c("img", {
+                            staticStyle: { width: "150px" },
+                            attrs: { src: "/images/slider/" + slider.filename }
+                          }),
+                          _vm._v(" "),
+                          _c("p", [
+                            _vm._v("Slider ke " + _vm._s(slider.urutan))
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "columns" }, [
+                            _c("div", { staticClass: "column" }, [
+                              _c(
+                                "button",
+                                {
+                                  staticClass:
+                                    "button button-primary is-danger",
+                                  on: {
+                                    click: function($event) {
+                                      _vm.deletePicture(
+                                        slider.id,
+                                        slider.urutan
+                                      )
+                                    }
+                                  }
+                                },
+                                [_vm._v("Hapus Foto ")]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "column" }, [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "button button-primary is-info",
+                                  on: {
+                                    click: function($event) {
+                                      _vm.copyToClipboard(
+                                        slider.filename,
+                                        "/images/slider/"
+                                      )
+                                    }
+                                  }
+                                },
+                                [_vm._v("Copy link")]
+                              )
+                            ])
+                          ])
+                        ])
+                      })
+                    )
+                  ],
+                  1
+                )
+              ]
+            )
+          ]),
           _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass: "column",
-              class: {
-                "is-three-quarters": _vm.numbers.length != 0,
-                " is-full": _vm.numbers.length == 0
-              }
-            },
-            [
+          _c("div", { staticClass: "columns" }, [
+            _c("div", { staticClass: "column is-one-quarter" }, [
+              _vm.kategoriImage == null
+                ? _c(
+                    "div",
+                    [
+                      _c(
+                        "b-field",
+                        [
+                          _c(
+                            "b-upload",
+                            {
+                              attrs: { "drag-drop": "" },
+                              model: {
+                                value: _vm.kategoriImage,
+                                callback: function($$v) {
+                                  _vm.kategoriImage = $$v
+                                },
+                                expression: "kategoriImage"
+                              }
+                            },
+                            [
+                              _c("section", { staticClass: "section" }, [
+                                _c(
+                                  "div",
+                                  { staticClass: "content has-text-centered" },
+                                  [
+                                    _c(
+                                      "p",
+                                      [
+                                        _c("b-icon", {
+                                          attrs: {
+                                            icon: "upload",
+                                            size: "is-large"
+                                          }
+                                        })
+                                      ],
+                                      1
+                                    ),
+                                    _vm._v(" "),
+                                    _c("p", [
+                                      _vm._v(
+                                        "Drop your files here or click to upload"
+                                      )
+                                    ])
+                                  ]
+                                )
+                              ])
+                            ]
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.kategoriImage != null
+                ? _c("div", [
+                    _c("img", {
+                      staticStyle: { width: "150px" },
+                      style: "background-color:" + _vm.kategoriColors.hex,
+                      attrs: { src: _vm.previewKategori, alt: "img" }
+                    }),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "columns is-multiline" }, [
+                      _c("div", { staticClass: "column is-three-quarters" }, [
+                        _c("div", { staticClass: "field" }, [
+                          _c("label", { staticClass: "label" }, [
+                            _vm._v("Nama Kategori")
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "control" }, [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.kategoriName,
+                                  expression: "kategoriName"
+                                }
+                              ],
+                              staticClass: "input",
+                              attrs: { type: "text", placeholder: "Name" },
+                              domProps: { value: _vm.kategoriName },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.kategoriName = $event.target.value
+                                }
+                              }
+                            })
+                          ])
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "column is-full" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "button button-success",
+                            on: { click: _vm.uploadKategori }
+                          },
+                          [_vm._v("Upload")]
+                        )
+                      ])
+                    ])
+                  ])
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "column is-three-quarters " }, [
               _c(
                 "div",
                 { staticClass: "box" },
                 [
-                  _vm._m(1),
+                  _vm._m(2),
                   _vm._v(" "),
                   _c(
                     "carousel",
@@ -52660,24 +52930,26 @@ var render = function() {
                         paginationEnabled: false
                       }
                     },
-                    _vm._l(_vm.sliders, function(slider) {
-                      return _c("slide", { key: slider.id }, [
+                    _vm._l(_vm.kategoris, function(kategori) {
+                      return _c("slide", { key: kategori.id }, [
                         _c("img", {
                           staticStyle: { width: "150px" },
-                          attrs: { src: "/images/slider/" + slider.filename }
+                          attrs: {
+                            src: "/images/kategori/" + kategori.filename
+                          }
                         }),
                         _vm._v(" "),
-                        _c("p", [_vm._v("Slider ke " + _vm._s(slider.urutan))]),
+                        _c("p", [_vm._v(_vm._s(kategori.name))]),
                         _vm._v(" "),
-                        _c("div", { staticClass: "columns" }, [
-                          _c("div", { staticClass: "column" }, [
+                        _c("ul", [
+                          _c("li", [
                             _c(
                               "button",
                               {
                                 staticClass: "button button-primary is-danger",
                                 on: {
                                   click: function($event) {
-                                    _vm.deletePicture(slider.id, slider.urutan)
+                                    _vm.deleteKategori(kategori.id)
                                   }
                                 }
                               },
@@ -52685,7 +52957,22 @@ var render = function() {
                             )
                           ]),
                           _vm._v(" "),
-                          _c("div", { staticClass: "column" }, [
+                          _c("li", [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "button button-primary is-warning",
+                                on: {
+                                  click: function($event) {
+                                    _vm.editKategori(kategori)
+                                  }
+                                }
+                              },
+                              [_vm._v("Edit Kategori")]
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("li", [
                             _c(
                               "button",
                               {
@@ -52693,8 +52980,8 @@ var render = function() {
                                 on: {
                                   click: function($event) {
                                     _vm.copyToClipboard(
-                                      slider.filename,
-                                      "/images/slider/"
+                                      kategori.filename,
+                                      "/images/kategori/"
                                     )
                                   }
                                 }
@@ -52709,195 +52996,33 @@ var render = function() {
                 ],
                 1
               )
-            ]
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "columns" }, [
-          _c("div", { staticClass: "column is-one-quarter" }, [
-            _vm.kategoriImage == null
-              ? _c(
-                  "div",
-                  [
-                    _c(
-                      "b-field",
-                      [
-                        _c(
-                          "b-upload",
-                          {
-                            attrs: { "drag-drop": "" },
-                            model: {
-                              value: _vm.kategoriImage,
-                              callback: function($$v) {
-                                _vm.kategoriImage = $$v
-                              },
-                              expression: "kategoriImage"
-                            }
-                          },
-                          [
-                            _c("section", { staticClass: "section" }, [
-                              _c(
-                                "div",
-                                { staticClass: "content has-text-centered" },
-                                [
-                                  _c(
-                                    "p",
-                                    [
-                                      _c("b-icon", {
-                                        attrs: {
-                                          icon: "upload",
-                                          size: "is-large"
-                                        }
-                                      })
-                                    ],
-                                    1
-                                  ),
-                                  _vm._v(" "),
-                                  _c("p", [
-                                    _vm._v(
-                                      "Drop your files here or click to upload"
-                                    )
-                                  ])
-                                ]
-                              )
-                            ])
-                          ]
-                        )
-                      ],
-                      1
-                    )
-                  ],
-                  1
-                )
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.kategoriImage != null
-              ? _c("div", [
-                  _c("img", {
-                    staticStyle: { width: "150px" },
-                    style: "background-color:" + _vm.kategoriColors.hex,
-                    attrs: { src: _vm.previewKategori, alt: "img" }
-                  }),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "columns is-multiline" }, [
-                    _c("div", { staticClass: "column is-three-quarters" }, [
-                      _c("div", { staticClass: "field" }, [
-                        _c("label", { staticClass: "label" }, [
-                          _vm._v("Nama Kategori")
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "control" }, [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.kategoriName,
-                                expression: "kategoriName"
-                              }
-                            ],
-                            staticClass: "input",
-                            attrs: { type: "text", placeholder: "Name" },
-                            domProps: { value: _vm.kategoriName },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.kategoriName = $event.target.value
-                              }
-                            }
-                          })
-                        ])
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "column is-full" }, [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "button button-success",
-                          on: { click: _vm.uploadKategori }
-                        },
-                        [_vm._v("Upload")]
-                      )
-                    ])
-                  ])
-                ])
-              : _vm._e()
+            ])
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "column is-three-quarters " }, [
-            _c(
-              "div",
-              { staticClass: "box" },
-              [
-                _vm._m(2),
-                _vm._v(" "),
-                _c(
-                  "carousel",
-                  {
-                    attrs: {
-                      perPage: 3,
-                      navigationEnabled: true,
-                      paginationEnabled: false
-                    }
-                  },
-                  _vm._l(_vm.kategoris, function(kategori) {
-                    return _c("slide", { key: kategori.id }, [
-                      _c("img", {
-                        staticStyle: { width: "150px" },
-                        style: "background-color:" + kategori.warna,
-                        attrs: { src: "/images/kategori/" + kategori.filename }
-                      }),
-                      _vm._v(" "),
-                      _c("p", [_vm._v(_vm._s(kategori.name))]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "columns" }, [
-                        _c("div", { staticClass: "column" }, [
-                          _c(
-                            "button",
-                            {
-                              staticClass: "button button-primary is-danger",
-                              on: {
-                                click: function($event) {
-                                  _vm.deleteKategori(kategori.id)
-                                }
-                              }
-                            },
-                            [_vm._v("Hapus Foto ")]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "column" }, [
-                          _c(
-                            "button",
-                            {
-                              staticClass: "button button-primary is-info",
-                              on: {
-                                click: function($event) {
-                                  _vm.copyToClipboard(
-                                    kategori.filename,
-                                    "/images/kategori/"
-                                  )
-                                }
-                              }
-                            },
-                            [_vm._v("Copy link")]
-                          )
-                        ])
-                      ])
-                    ])
-                  })
-                )
-              ],
-              1
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _vm._m(3)
-      ])
+          _c(
+            "b-modal",
+            {
+              attrs: {
+                active: _vm.isComponentModalActive,
+                "has-modal-card": ""
+              },
+              on: {
+                "update:active": function($event) {
+                  _vm.isComponentModalActive = $event
+                }
+              }
+            },
+            [
+              _c("modal-form", {
+                attrs: { kategori: _vm.editKategori },
+                on: { "get-kategori": _vm.getKategori }
+              })
+            ],
+            1
+          )
+        ],
+        1
+      )
     ]
   )
 }
@@ -52926,14 +53051,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "info" }, [
       _c("h2", [_vm._v("Kategori Anda")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "columns" }, [
-      _c("div", { staticClass: "column" })
     ])
   }
 ]
@@ -59744,6 +59861,55 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 153 */,
+/* 154 */,
+/* 155 */,
+/* 156 */,
+/* 157 */,
+/* 158 */,
+/* 159 */,
+/* 160 */,
+/* 161 */,
+/* 162 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(163);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(3)("09f2f0b3", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-1c27d7e2\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./DashboardComponent.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-1c27d7e2\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./DashboardComponent.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 163 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\nul{\n    margin: 0px;\n    list-style: none;\n}\nul button{\n    width: 100%;\n}\n", ""]);
+
+// exports
+
 
 /***/ })
 /******/ ]);

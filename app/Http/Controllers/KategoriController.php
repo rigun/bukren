@@ -101,41 +101,43 @@ class KategoriController extends Controller
      */
     public function update(Request $request, $id)
     {
-            $kategori = Kategori::findOrFail($id);
+        $this->validateWith([
+            'kategoriName' => 'required',
+          ]);
+          $item = Kategori::find($id);
+              if (empty($item)) {
+            return response()->json(['message' => 'Sorry file does not exist'], 400);
+            }else{
+                $photos = $request->file('file');
+
+                if($photos){
+                    $file_path = $this->photos_path . '/' . $item->filename;
     
-            if (empty($kategori)) {
-                return response()->json(['message' => 'Sorry file does not exist'], 400);
-            }
+                    if (file_exists($file_path)) {
+                        unlink($file_path);
+                    }
     
-            $file_path = $this->photos_path . '/' . $kategori->filename;
+                    if (!is_array($photos)) {
+                        $photos = [$photos];
+                    }
     
-            if (file_exists($file_path)) {
-                unlink($file_path);
-            }
-            $photos = $request->file('file');
- 
-            if (!is_array($photos)) {
-                $photos = [$photos];
-            }
+                    if (!is_dir($this->photos_path)) {
+                        mkdir($this->photos_path, 0777);
+                    }
     
-            if (!is_dir($this->photos_path)) {
-                mkdir($this->photos_path, 0777);
-            }
+                    $photo = $photos[0];
+                    $name = sha1(date('YmdHis') . str_random(30));
+                    $save_name = $name . '.' . $photo->getClientOriginalExtension();
+                    $photo->move($this->photos_path, $save_name);
     
-            $photo = $photos[0];
-            $name = sha1(date('YmdHis') . str_random(30));
-            $save_name = $name . '.' . $photo->getClientOriginalExtension();
+                    $item->filename = $save_name;
+                    $item->originalName = basename($photo->getClientOriginalName());
+                }
+              $kategori->name = $request->kategoriName;
+              $item->save();
     
-            $photo->move($this->photos_path, $save_name);
-      
-              $kategori = new Kategori();
-              $kategori->name = $request->name;
-              $kategori->filename = $save_name;
-              $kategori->originalName = basename($photo->getClientOriginalName());
-         
-              $kategori->save();
-    
-              return response()->json(['status' => 'success','msg'=>'Kategori berhasil diupdate']);
+              return $item;
+        }
     }
 
     /**

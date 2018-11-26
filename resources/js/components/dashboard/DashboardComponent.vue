@@ -123,18 +123,20 @@
                 
                 <carousel :perPage="3" :navigationEnabled="true" :paginationEnabled="false">
                     <slide v-for="kategori in kategoris" :key="kategori.id" >
-                            <img style="width: 150px" :style="'background-color:'+kategori.warna" :src="'/images/kategori/'+kategori.filename">
+                            <img style="width: 150px" :src="'/images/kategori/'+kategori.filename">
                             <p>{{kategori.name}}</p>
-                            <div class="columns">
-                                <div class="column">
-                                <button class="button button-primary is-danger" @click="deleteKategori(kategori.id)">Hapus Foto </button>
-                                    
-                                </div>
-                                <div class="column">
-                                <button class="button button-primary is-info" @click="copyToClipboard(kategori.filename,'/images/kategori/')">Copy link</button>
 
-                                </div>
-                            </div>
+                            <ul>
+                                <li>
+                                    <button class="button button-primary is-danger" @click="deleteKategori(kategori.id)">Hapus Foto </button>
+                                </li>
+                                <li>
+                                    <button class="button button-primary is-warning" @click="editKategori(kategori)">Edit Kategori</button>
+                                </li>
+                                <li>
+                                    <button class="button button-primary is-info" @click="copyToClipboard(kategori.filename,'/images/kategori/')">Copy link</button>
+                                </li>
+                            </ul>
                     </slide>
                 
                 </carousel>
@@ -143,17 +145,132 @@
       </div><!-- end of kategori -->
 
       
-      <div class="columns">
-          <div class="column">
-
-          </div>
-      </div>
+   <b-modal :active.sync="isComponentModalActive" has-modal-card>
+            <modal-form :kategori="editKategori" v-on:get-kategori="getKategori"></modal-form>
+        </b-modal>
 </div> <!-- end of container-->
 </div>
 </template>
-
+<style>
+    ul{
+        margin: 0px;
+        list-style: none;
+    }
+    ul button{
+        width: 100%;
+    }
+</style>
 <script>
 import { Carousel, Slide } from 'vue-carousel';
+
+const ModalForm = {
+    props: ['kategori'],
+        data(){
+            return{
+                load: false,
+                kategoriImage: null,
+                kategoriName: '',
+                editImage: null,
+            }
+        },
+        mounted(){
+                this.setData();
+        },
+        template: `
+            <form @submit.prevent="senddata();load = true">
+                <div class="modal-card">
+                    <header class="modal-card-head">
+                        <p class="modal-card-title" >Add kategori</p>
+                    </header>
+                    <section class="modal-card-body">
+                        <div v-if="kategoriImage == null && editImage == null" >
+                                <b-field >
+                                    <b-upload v-model="kategoriImage"
+                                        drag-drop >
+                                        <section class="section">
+                                            <div class="content has-text-centered">
+                                                <p>
+                                                    <b-icon
+                                                        icon="upload"
+                                                        size="is-large">
+                                                    </b-icon>
+                                                </p>
+                                                <p>Drop your files here or click to upload</p>
+                                            </div>
+                                        </section>
+                                    </b-upload>
+                                </b-field>
+                        </div>
+                        <div style="text-align:center;" v-else-if="editImage == null">
+                            <img style="width: 150px" :src="previewKategori" alt="img">
+                            <a @click="kategoriImage = null" class="button is-danger">Ganti</a>
+                        </div>
+                        <div style="text-align:center;" v-else-if="editImage != null">
+                            <img style="width: 150px" :src="'/images/kategori/'+editImage" alt="img">
+                            <a @click="editImage = null" class="button is-danger">Ganti</a>
+                        </div>
+                            <div class="columns is-multiline">
+                                <div class="column is-three-quarters">
+                                    <div class="field">
+                                        <label class="label" >Nama Kategori</label>
+                                        <div class="control">
+                                            <input class="input" type="text" v-model="kategoriName" placeholder="Name">
+                                        </div>
+                                        
+                                    </div>
+                                
+                                </div>
+                            </div>
+                            
+                    </section>
+                    <footer class="modal-card-foot">
+                        <button class="button is-fullwidth" type="button" @click="$parent.close()">Close</button>
+                        <button class="button is-primary is-fullwidth" :class="{'is-loading' : load}" >Edit</button>
+                    </footer>
+                </div>
+            </form>
+        `,
+        methods:{
+            setData(){
+                this.editImage = this.kategori.filename
+                this.kategoriName = this.kategori.kategoriName
+            },
+            senddata(){
+                 let formData = new FormData();
+                 if(this.editImage == null){
+                     formData.append('file',  this.kategoriImage);
+                 }
+                 formData.append('kategoriName',  this.kategoriName);
+                    var uri = '/api/kategori/'+this.kategori.id;
+                    axios.patch(uri,formData,{
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                        Authorization: 'Bearer ' + localStorage.getItem('token')
+                }
+                }).then((response) => {
+                        this.load = false;
+                        this.$parent.close();
+                         this.$emit('get-kategori')
+                    }).catch(error => {
+                        this.load = false;
+                        this.$parent.close()
+                        this.$toast.open({
+                        duration: 2000,
+                        message: error,
+                        position: 'is-bottom',
+                        type: 'is-danger',
+                        queue: false,
+                    })
+                    });
+            }
+        },
+        computed: {
+            previewBarang(){
+                return URL.createObjectURL(this.kategoriImage);
+            }
+        }
+    }
+
     export default {
         components:{
             Carousel,
@@ -171,7 +288,8 @@ import { Carousel, Slide } from 'vue-carousel';
                 kategoriImage: null,
                 kategoriColors :'#333',
                 kategoriName : '',
-               
+                isComponentModalActive: false,
+                editKategori : {}
             }
         },
         mounted(){
@@ -180,7 +298,10 @@ import { Carousel, Slide } from 'vue-carousel';
          
         },
         methods:{
-            
+            editKategori(kategori){
+                this.isComponentModalActive = true;
+                this.editKategori = kategori
+            },
            uploadSlider(){
               let formData = new FormData();
               formData.append('file',  this.sliderImage);
