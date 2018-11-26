@@ -101,6 +101,7 @@ class KategoriController extends Controller
      */
     public function update(Request $request, $id)
     {
+        return "tes";
         $this->validateWith([
             'name' => 'required',
           ]);

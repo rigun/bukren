@@ -243,7 +243,6 @@ const ModalForm = {
                      formData.append('file',  this.kategoriImage);
                  }
                  formData.append('name',  this.kategoriName);
-                    console.log(formData)
                     var uri = '/api/kategori/'+this.kategori.id;
                     axios.patch(uri,formData,{
                 headers: {
@@ -255,11 +254,12 @@ const ModalForm = {
                         this.$parent.close();
                          this.$emit('get-kategori')
                     }).catch(error => {
+                        console.log(error)
                         this.load = false;
                         this.$parent.close()
                         this.$toast.open({
                         duration: 2000,
-                        message: error,
+                        message: "Coba Lagi",
                         position: 'is-bottom',
                         type: 'is-danger',
                         queue: false,
