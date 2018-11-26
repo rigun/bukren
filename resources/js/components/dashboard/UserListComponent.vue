@@ -46,7 +46,7 @@
                   <td>{{ user.name }}</td>
                   <td>{{ user.email }}</td>
                   <td>{{ user.created_at }}</td>
-                  <td><a class="button " :class="{'is-danger': user.status == 0 , 'is-success': user.status ==1 }" @click="updateStatus(user)"><span v-if="user.status == 0">Belum Verifikasi</span><span v-if="user.status == 1">Sudah Verifikasi</span></a></td>
+                  <td><a class="button " :class="{'is-danger': user.status == 0 , 'is-success': user.status ==1,'is-loading' : load }" @click="updateStatus(user); load = true"><span v-if="user.status == 0">Belum Verifikasi</span><span v-if="user.status == 1">Sudah Verifikasi</span></a></td>
                   <td><a class="button is-danger" href="#" v-on:click.prevent="modalDelete();setIdDelete(user)">Hapus</a></td>
                 </tr>
             
@@ -131,7 +131,7 @@
              }else if(user.status == 1){
                status = 0
              }
-              let uri = '/api/user/updateStatus/'+this.user.id;
+              let uri = '/api/user/updateStatus/'+user.id;
               axios.patch(uri, {status: status},{
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('token')

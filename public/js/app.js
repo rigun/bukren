@@ -53134,7 +53134,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       } else if (user.status == 1) {
         status = 0;
       }
-      var uri = '/api/user/updateStatus/' + this.user.id;
+      var uri = '/api/user/updateStatus/' + user.id;
       axios.patch(uri, { status: status }, {
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token')
@@ -53433,11 +53433,13 @@ var render = function() {
                         staticClass: "button ",
                         class: {
                           "is-danger": user.status == 0,
-                          "is-success": user.status == 1
+                          "is-success": user.status == 1,
+                          "is-loading": _vm.load
                         },
                         on: {
                           click: function($event) {
                             _vm.updateStatus(user)
+                            _vm.load = true
                           }
                         }
                       },
