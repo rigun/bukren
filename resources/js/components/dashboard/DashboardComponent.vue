@@ -185,7 +185,7 @@ const ModalForm = {
                         <p class="modal-card-title" >Add kategori</p>
                     </header>
                     <section class="modal-card-body">
-                        <div v-if="kategoriImage == null && editImage == null" >
+                        <div v-if="kategoriImage == null && editImage == null" style="text-align: center">
                                 <b-field >
                                     <b-upload v-model="kategoriImage"
                                         drag-drop >
@@ -267,7 +267,7 @@ const ModalForm = {
             }
         },
         computed: {
-            previewBarang(){
+            previewKategori(){
                 return URL.createObjectURL(this.kategoriImage);
             }
         }
