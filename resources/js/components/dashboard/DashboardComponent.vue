@@ -244,7 +244,7 @@ const ModalForm = {
                  }
                  formData.append('name', this.kategoriName);
                     var uri = '/api/kategori/'+this.kategori.id;
-                    axios.patch(uri,formData,{
+                    axios.post(uri,formData,{
                 headers: {
                     'Content-Type': 'multipart/form-data',
                         Authorization: 'Bearer ' + localStorage.getItem('token')

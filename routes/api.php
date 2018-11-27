@@ -30,7 +30,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::delete('/slider/{id}', 'SliderController@destroy');
 
     Route::post('/kategori', 'KategoriController@store');
-    Route::patch('/kategori/{id}', 'KategoriController@update');
+    Route::post('/kategori/{id}', 'KategoriController@update');
     Route::delete('/kategori/{id}', 'KategoriController@destroy');
 
     Route::post('/barang', 'BookController@store');
