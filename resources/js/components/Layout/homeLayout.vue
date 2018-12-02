@@ -256,7 +256,7 @@ const ModalForm = {
                         email: this.email,
                         password: this.password
                     }).then(response => {
-                        if(response.data.status == '1'){
+                        if(response.data.status == '1' || response.data.status == '3'){
                             store.commit('loginUser')
                             localStorage.setItem('token', response.data.access_token)
                             localStorage.setItem('roles', response.data.role)

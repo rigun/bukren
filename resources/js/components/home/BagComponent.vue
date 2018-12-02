@@ -53,7 +53,7 @@ export default {
     methods:{
         hubPemilik(id_pemilik){
             this.load = true;
-             let uri = '/api/pesan/';
+             let uri = '/api/pesan';
                     axios.post(uri,{id_penerima: id_pemilik},{
                         headers: {
                             Authorization: 'Bearer ' + localStorage.getItem('token')

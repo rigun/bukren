@@ -129,7 +129,7 @@ export default {
 
       hubPemilik(id_pemilik){
            this.load2 = true;
-             let uri = '/api/pesan/';
+             let uri = '/api/pesan';
              if(this.token == null){
               this.$toast.open({
                         duration: 2000,
